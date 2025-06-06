@@ -4,9 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	"gomux/tui"
-
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/sharon-xa/gomux/tui"
 	"github.com/spf13/cobra"
 )
 

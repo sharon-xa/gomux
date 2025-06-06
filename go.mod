@@ -1,4 +1,4 @@
-module gomux
+module github.com/sharon-xa/gomux
 
 go 1.24.3
 

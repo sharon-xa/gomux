@@ -1,6 +1,6 @@
 package main
 
-import "gomux/cmd"
+import "github.com/sharon-xa/gomux/cmd"
 
 func main() {
 	cmd.Execute()
