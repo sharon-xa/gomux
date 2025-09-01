@@ -2,26 +2,31 @@ package database
 
 import (
 	"fmt"
+	"io/fs"
 	"os"
-
-	"github.com/sharon-xa/gomux/internal/models"
+	"path"
 )
 
 const (
-	gomuxDataPath   string = "/.local/share/gomux/"
-	gomuxConfigPath string = "/.config/gomux/"
-	gomuxCachePath  string = "/.cache/gomux/"
+	GOMUX_DATA_PATH   string = "/.local/share/gomux/"
+	GOMUX_CONFIG_PATH string = "/.config/gomux/"
+	GOMUX_CACHE_PATH  string = "/.cache/gomux/"
 )
 
 type DB struct {
-	File             *models.File
-	gomuxDirFullPath string
-	dataDirFullPath  string
-	dataStateFile    string
+	gomuxDirPath string
+	dataStateDir string
+	dataDir      string
 }
 
 /*
-dataState.json
+dataState/
+	|___ example/
+	|				|___ example.tmux.json
+	| 			|___ example.tmux.json
+	|___ example/
+					|___ example.tmux.json
+
 data/
 	|___ example/
 	|				|___ example.tmux.sh
@@ -39,9 +44,9 @@ func InitDB() {
 		panic(err)
 	}
 
-	gomuxDirFullPath := homeDir + gomuxDataPath
-	dataStateFile := gomuxDirFullPath + "dataState.json"
-	dataDirFullPath := gomuxDirFullPath + "data/"
+	gomuxDirFullPath := homeDir + GOMUX_DATA_PATH
+	dataStateDir := gomuxDirFullPath + "dataState/"
+	dataDir := gomuxDirFullPath + "data/"
 
 	if _, err := os.Stat(gomuxDirFullPath); os.IsNotExist(err) {
 		err = os.MkdirAll(gomuxDirFullPath, 0o755)
@@ -51,40 +56,43 @@ func InitDB() {
 		}
 	}
 
-	if _, err := os.Stat(dataStateFile); os.IsNotExist(err) {
-		err := os.WriteFile(dataStateFile, []byte(""), 0o644)
-		if err != nil {
-			fmt.Println("Couldn't create the dataState file: \"dataState.json\"")
-			panic(err)
-		}
-	}
-
-	if _, err := os.Stat(dataDirFullPath); os.IsNotExist(err) {
-		err = os.Mkdir(dataDirFullPath, 0o755)
-		if err != nil {
-			fmt.Println(
-				"Couldn't make direcotory inside gomux directory.\nFull Path:",
-				gomuxDirFullPath,
-			)
-			panic(err)
-		}
-	}
+	checkDirectoryExistence(dataStateDir)
+	checkDirectoryExistence(dataDir)
 }
 
 func NewDB() *DB {
 	homeDir, _ := os.UserHomeDir()
-	gomuxDirFullPath := homeDir + gomuxDataPath
-	dataStateFile := gomuxDirFullPath + "dataState.json"
-	dataDirFullPath := gomuxDirFullPath + "data/"
+
+	gomuxDirPath := path.Join(homeDir + GOMUX_DATA_PATH)
+	dataStateDir := path.Join(gomuxDirPath, "dataState")
+	dataDir := path.Join(gomuxDirPath, "data")
 
 	return &DB{
-		gomuxDirFullPath: gomuxDirFullPath,
-		dataStateFile:    dataStateFile,
-		dataDirFullPath:  dataDirFullPath,
+		gomuxDirPath: gomuxDirPath,
+		dataStateDir: dataStateDir,
+		dataDir:      dataDir,
 	}
 }
 
-// This function will create a tmux script file
-func (db *DB) Create(f *models.File) error {
+func (db *DB) saveFile(filepath string, fileContent []byte, executable bool) error {
+	dir, _ := path.Split(filepath)
+
+	if dir != "" {
+		err := os.MkdirAll(dir, 0755)
+		if err != nil {
+			return fmt.Errorf("failed to create directory %s: %w", dir, err)
+		}
+	}
+
+	perm := fs.FileMode(0644)
+	if executable {
+		perm = fs.FileMode(0755)
+	}
+
+	err := os.WriteFile(filepath, fileContent, perm)
+	if err != nil {
+		return fmt.Errorf("failed to write file %s: %w", filepath, err)
+	}
+
 	return nil
 }
