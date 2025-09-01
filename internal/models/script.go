@@ -7,13 +7,13 @@ import (
 )
 
 type Script struct {
-	Session        session  `json:"session"`
-	Windows        []window `json:"windows"`
+	Session        Session  `json:"session"`
+	Windows        []Window `json:"windows"`
 	StartingWindow int      `json:"startingWindow"` // when the tmux start on which window should we start
-	Panes          []pane   `json:"panes"`
+	Panes          []Pane   `json:"panes"`
 }
 
-func NewScript(s session, ws []window, sw int, ps []pane) *Script {
+func NewScript(s Session, ws []Window, sw int, ps []Pane) *Script {
 	return &Script{
 		Session:        s,
 		Windows:        ws,

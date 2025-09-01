@@ -5,21 +5,21 @@ import (
 	"strings"
 )
 
-type session struct {
+type Session struct {
 	Name      string `json:"name"`      // Make sure to sanitaize this field, it will become a filename
 	Directory string `json:"directory"` // the full path to where the session should start
 	Type      string `json:"type"`      // Make sure to sanitaize this field, it will become a folder name
 }
 
-func NewSession(name, dir, typ string) *session {
-	return &session{
+func NewSession(name, dir, typ string) *Session {
+	return &Session{
 		Name:      name,
 		Directory: dir,
 		Type:      typ,
 	}
 }
 
-func (s *session) createSession() string {
+func (s *Session) createSession() string {
 	return fmt.Sprintf(
 		`tmux new-session -d -s $%s -c "$%s"`,
 		SESSION_NAME_VARIABLE,
@@ -27,7 +27,7 @@ func (s *session) createSession() string {
 	)
 }
 
-type window struct {
+type Window struct {
 	Name              string `json:"name"`
 	Number            int    `json:"number"`
 	Command           string `json:"command"`
@@ -35,7 +35,7 @@ type window struct {
 	SynchronizedPanes bool   `json:"synchronizedPanes"`
 }
 
-func (w *window) createWindow() string {
+func (w *Window) createWindow() string {
 	target := fmt.Sprintf(`$%s:%d`,
 		SESSION_NAME_VARIABLE,
 		w.Number,
@@ -75,14 +75,14 @@ tmux send-keys -t %s "%s" C-m`,
 	return builder.String()
 }
 
-type pane struct {
+type Pane struct {
 	ID        int       `json:"id"`
 	Location  int       `json:"location"` // on which window will we create this pane
 	Direction Direction `json:"direction"`
 	Command   string    `json:"command"`
 }
 
-func (p *pane) createPane() string {
+func (p *Pane) createPane() string {
 	target := fmt.Sprintf(`$%s:$%d.%d`,
 		SESSION_NAME_VARIABLE,
 		p.Location,

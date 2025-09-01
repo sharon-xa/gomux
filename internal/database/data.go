@@ -7,7 +7,7 @@ import (
 	"github.com/sharon-xa/gomux/internal/models"
 )
 
-func (db *DB) CreateScript(script *models.Script) error {
+func (db *DB) AddScript(script *models.Script) error {
 	jsonScript, err := script.Jsonify()
 	if err != nil {
 		log.Println("Failed to jsonify script: ", err)
