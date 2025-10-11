@@ -4,21 +4,132 @@ Copyright © 2025 Ali Jabar <ali93456@gmail.com>
 package cmd
 
 import (
+	"github.com/sharon-xa/gomux/internal/models"
+	"github.com/sharon-xa/gomux/pkg/actions"
 	"github.com/spf13/cobra"
 )
 
-var createCmd = &cobra.Command{
-	Use:   "create",
-	Short: "create a tmux script",
-	Run: func(cmd *cobra.Command, args []string) {
-		// a := actions.NewActions()
-		// err := a.CreateScript()
-		// if err != nil {
-		// fmt.Println(err)
-		// }
-	},
+var (
+	actionsInstance actions.IActions
+	createCmd       = &cobra.Command{
+		Use:   "create",
+		Short: "Build a tmux script configuration",
+		Long: `The create command lets you build a tmux script step by step 
+or all at once. Use subcommands to add sessions, windows, and panes.
+
+Examples:
+
+  # Create a session only
+  gomux create session --name dev --dir ~/projects --type development
+
+  # Add a window with layout
+  gomux create window --name editor --cmd "vim ." --layout main-horizontal
+
+  # Add a pane to a window
+  gomux create pane --window 1 --direction horizontal --cmd "npm run dev"
+
+  # Create everything at once
+  gomux create all --name dev --dir ~/projects`,
+		PersistentPreRun: func(cmd *cobra.Command, args []string) {
+			actionsInstance = actions.NewActions()
+		},
+		PersistentPostRunE: func(cmd *cobra.Command, args []string) error {
+			return actionsInstance.CreateScript()
+		},
+	}
+)
+
+func newSessionCmd() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "session",
+		Short: "Create a new tmux session",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			name, _ := cmd.Flags().GetString("name")
+			dir, _ := cmd.Flags().GetString("dir")
+			typ, _ := cmd.Flags().GetString("type")
+
+			session := models.Session{
+				Name:      name,
+				Directory: dir,
+				Type:      typ,
+			}
+			return actionsInstance.AddSession(&session)
+		},
+	}
+
+	cmd.Flags().String("name", "", "Session name")
+	cmd.Flags().String("dir", "", "Session working directory")
+	cmd.Flags().String("type", "", "Session type")
+	cmd.MarkFlagRequired("name")
+	cmd.MarkFlagRequired("dir")
+
+	return cmd
+}
+
+func newWindowCmd() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "window",
+		Short: "Add a window to the current session",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			name, _ := cmd.Flags().GetString("name")
+			number, _ := cmd.Flags().GetInt("number")
+			cmdStr, _ := cmd.Flags().GetString("cmd")
+			layout, _ := cmd.Flags().GetString("layout")
+			sync, _ := cmd.Flags().GetBool("sync")
+
+			w := models.Window{
+				Name:              name,
+				Number:            number,
+				Command:           cmdStr,
+				Layout:            models.Layout(layout),
+				SynchronizedPanes: sync,
+			}
+
+			return actionsInstance.AddWindow(&w)
+		},
+	}
+
+	cmd.Flags().String("name", "", "Window name")
+	cmd.Flags().Int("number", 1, "Window number")
+	cmd.Flags().String("cmd", "", "Command to run in this window")
+	cmd.Flags().String("layout", string(models.LayoutEvenVertical), "Layout type")
+	cmd.Flags().Bool("sync", false, "Synchronize panes")
+
+	return cmd
+}
+
+func newPaneCmd() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "pane",
+		Short: "Add a pane to a window",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			id, _ := cmd.Flags().GetInt("id")
+			location, _ := cmd.Flags().GetInt("window")
+			dir, _ := cmd.Flags().GetString("direction")
+			cmdStr, _ := cmd.Flags().GetString("cmd")
+
+			p := models.Pane{
+				ID:        id,
+				Location:  location,
+				Direction: models.Direction(dir),
+				Command:   cmdStr,
+			}
+
+			return actionsInstance.AddPane(&p)
+		},
+	}
+
+	cmd.Flags().Int("id", 0, "Pane ID")
+	cmd.Flags().Int("window", 0, "Window location (number)")
+	cmd.Flags().String("direction", string(models.Vertical), "Pane split direction")
+	cmd.Flags().String("cmd", "", "Command to run in pane")
+
+	return cmd
 }
 
 func init() {
 	rootCmd.AddCommand(createCmd)
+	createCmd.AddCommand(newSessionCmd())
+	createCmd.AddCommand(newWindowCmd())
+	createCmd.AddCommand(newPaneCmd())
 }

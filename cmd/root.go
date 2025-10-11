@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"log"
 	"os"
 
 	tea "github.com/charmbracelet/bubbletea"
@@ -15,9 +16,15 @@ var rootCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		// If no args or flags, launch TUI
 		if len(os.Args) == 1 {
-			p := tea.NewProgram(tui.InitialModel())
+			f, err := tea.LogToFile("debug.log", "debug")
+			if err != nil {
+				log.Fatalf("error: %w", err)
+			}
+			defer f.Close()
+
+			p := tea.NewProgram(tui.InitialModel(), tea.WithAltScreen())
 			if _, err := p.Run(); err != nil {
-				fmt.Println("Error running TUI:", err)
+				log.Fatalln("Error running TUI:", err)
 				os.Exit(1)
 			}
 			return

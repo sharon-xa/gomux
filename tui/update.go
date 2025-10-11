@@ -4,6 +4,11 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 )
 
+func (m *model) updateSize() {
+	m.list.SetWidth(m.width)
+	m.list.SetHeight(m.height)
+}
+
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var cmd tea.Cmd
 	var cmds []tea.Cmd
@@ -31,7 +36,6 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 	}
 
-	// Update the list if we're in main menu
 	if m.state == mainMenu {
 		m.list, cmd = m.list.Update(msg)
 		cmds = append(cmds, cmd)
@@ -58,15 +62,17 @@ func (m model) updateMainMenu(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 
 func (m model) updateCreateScript(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 	switch msg.String() {
-	case "q", "ctrl+c", "esc":
+	case "ctrl+c", "esc":
 		m.state = mainMenu
 		return m, nil
+
 	case "enter":
 		// Here you would launch the script creation flow
 		// For now, just show a success message and return to menu
 		m.state = mainMenu
 		return m, nil
 	}
+
 	return m, nil
 }
 
@@ -75,8 +81,8 @@ func (m model) updateEditScript(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 	case "q", "ctrl+c", "esc":
 		m.state = mainMenu
 		return m, nil
+
 	case "1", "2", "3":
-		// Mock script selection
 		scripts := []string{"dev-setup", "docker-env", "monitoring"}
 		if idx := int(msg.String()[0] - '1'); idx < len(scripts) {
 			m.selectedScript = scripts[idx]
@@ -93,8 +99,8 @@ func (m model) updateRunScript(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 	case "q", "ctrl+c", "esc":
 		m.state = mainMenu
 		return m, nil
+
 	case "1", "2", "3":
-		// Mock script running
 		scripts := []string{"dev-setup", "docker-env", "monitoring"}
 		if idx := int(msg.String()[0] - '1'); idx < len(scripts) {
 			m.selectedScript = scripts[idx]

@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/charmbracelet/lipgloss"
+	u "github.com/sharon-xa/gomux/tui/utils"
 )
 
 func (m model) View() string {
@@ -33,7 +34,7 @@ func (m model) viewMainMenu() string {
 func (m model) viewCreateScript() string {
 	var s strings.Builder
 
-	s.WriteString(titleStyle.Render("📝 Create New Tmux Script"))
+	s.WriteString(u.TitleStyle.Render("📝 Create New Tmux Script"))
 	s.WriteString("\n\n")
 
 	s.WriteString("This will launch the interactive script creation wizard.\n\n")
@@ -44,9 +45,9 @@ func (m model) viewCreateScript() string {
 	s.WriteString("• Pane configuration (splits, commands)\n")
 	s.WriteString("• Review and save\n\n")
 
-	s.WriteString(successStyle.Render("Press Enter to start the wizard"))
+	s.WriteString(u.SuccessStyle.Render("Press Enter to start the wizard"))
 	s.WriteString("\n\n")
-	s.WriteString(helpStyle.Render("Enter: Start wizard • Esc: Back to main menu"))
+	s.WriteString(u.HelpStyle.Render("Enter: Start wizard • Esc: Back to main menu"))
 
 	return s.String()
 }
@@ -54,7 +55,7 @@ func (m model) viewCreateScript() string {
 func (m model) viewEditScript() string {
 	var s strings.Builder
 
-	s.WriteString(titleStyle.Render("✏️ Edit Tmux Script"))
+	s.WriteString(u.TitleStyle.Render("✏️ Edit Tmux Script"))
 	s.WriteString("\n\n")
 
 	s.WriteString("Select a script to edit:\n\n")
@@ -65,11 +66,11 @@ func (m model) viewEditScript() string {
 
 	s.WriteString("\n")
 	if m.selectedScript != "" {
-		s.WriteString(successStyle.Render(fmt.Sprintf("Selected: %s", m.selectedScript)))
+		s.WriteString(u.SuccessStyle.Render(fmt.Sprintf("Selected: %s", m.selectedScript)))
 		s.WriteString("\n")
 	}
 
-	s.WriteString(helpStyle.Render("1-3: Select script • Esc: Back to main menu"))
+	s.WriteString(u.HelpStyle.Render("1-3: Select script • Esc: Back to main menu"))
 
 	return s.String()
 }
@@ -77,7 +78,7 @@ func (m model) viewEditScript() string {
 func (m model) viewRunScript() string {
 	var s strings.Builder
 
-	s.WriteString(titleStyle.Render("▶️ Run Tmux Script"))
+	s.WriteString(u.TitleStyle.Render("▶️ Run Tmux Script"))
 	s.WriteString("\n\n")
 
 	s.WriteString("Select a script to run:\n\n")
@@ -92,11 +93,11 @@ func (m model) viewRunScript() string {
 
 	s.WriteString("\n")
 	if m.selectedScript != "" {
-		s.WriteString(successStyle.Render(fmt.Sprintf("Running: %s", m.selectedScript)))
+		s.WriteString(u.SuccessStyle.Render(fmt.Sprintf("Running: %s", m.selectedScript)))
 		s.WriteString("\n")
 	}
 
-	s.WriteString(helpStyle.Render("1-3: Run script • Esc: Back to main menu"))
+	s.WriteString(u.HelpStyle.Render("1-3: Run script • Esc: Back to main menu"))
 
 	return s.String()
 }
@@ -104,7 +105,7 @@ func (m model) viewRunScript() string {
 func (m model) viewListScripts() string {
 	var s strings.Builder
 
-	s.WriteString(titleStyle.Render("📋 Tmux Scripts"))
+	s.WriteString(u.TitleStyle.Render("📋 Tmux Scripts"))
 	s.WriteString("\n\n")
 
 	if len(m.scripts) == 0 {
@@ -137,7 +138,7 @@ func (m model) viewListScripts() string {
 	}
 
 	s.WriteString("\n")
-	s.WriteString(helpStyle.Render("d: Delete script • Esc: Back to main menu"))
+	s.WriteString(u.HelpStyle.Render("d: Delete script • Esc: Back to main menu"))
 
 	return s.String()
 }
@@ -145,7 +146,7 @@ func (m model) viewListScripts() string {
 func (m model) viewSettings() string {
 	var s strings.Builder
 
-	s.WriteString(titleStyle.Render("⚙️ Gomux Settings"))
+	s.WriteString(u.TitleStyle.Render("⚙️ Gomux Settings"))
 	s.WriteString("\n\n")
 
 	s.WriteString("Configuration:\n\n")
@@ -167,10 +168,8 @@ func (m model) viewSettings() string {
 
 	s.WriteString("\n")
 	s.WriteString(
-		helpStyle.Render("e: Edit settings • r: Reset to defaults • Esc: Back to main menu"),
+		u.HelpStyle.Render("e: Edit settings • r: Reset to defaults • Esc: Back to main menu"),
 	)
 
 	return s.String()
 }
-
-// Helper function to center text
