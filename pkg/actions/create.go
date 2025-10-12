@@ -10,10 +10,12 @@ func (a *Actions) CreateScriptAllInOne(script *models.Script) error {
 	if len(script.Windows) == 0 {
 		return errors.New("there have to be at least one window")
 	}
+
 	err := a.DB.AddScript(script)
 	if err != nil {
 		return err
 	}
+
 	return nil
 }
 
@@ -21,10 +23,12 @@ func (a *Actions) CreateScript() error {
 	if len(a.CurrentScript.Windows) == 0 {
 		return errors.New("there have to be at least one window")
 	}
+
 	err := a.DB.AddScript(a.CurrentScript)
 	if err != nil {
 		return err
 	}
+
 	return nil
 }
 

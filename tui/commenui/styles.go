@@ -1,4 +1,4 @@
-package utils
+package commenui
 
 import (
 	"github.com/charmbracelet/bubbles/list"
@@ -6,6 +6,8 @@ import (
 )
 
 var (
+	AppStyle = lipgloss.NewStyle().Padding(1, 2)
+
 	TitleStyle = lipgloss.NewStyle().
 			Foreground(lipgloss.Color("#FAFAFA")).
 			Background(lipgloss.Color("#7D56F4")).
@@ -35,5 +37,4 @@ func StyleList(l *list.Model) {
 	l.SetShowStatusBar(false)
 	l.SetFilteringEnabled(true)
 	l.Styles.Title = TitleStyle
-	l.Styles.HelpStyle = HelpStyle
 }

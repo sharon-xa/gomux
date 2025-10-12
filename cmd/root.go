@@ -18,11 +18,11 @@ var rootCmd = &cobra.Command{
 		if len(os.Args) == 1 {
 			f, err := tea.LogToFile("debug.log", "debug")
 			if err != nil {
-				log.Fatalf("error: %w", err)
+				log.Fatalf("error: %s", err.Error())
 			}
 			defer f.Close()
 
-			p := tea.NewProgram(tui.InitialModel(), tea.WithAltScreen())
+			p := tea.NewProgram(tui.NewModel(), tea.WithAltScreen())
 			if _, err := p.Run(); err != nil {
 				log.Fatalln("Error running TUI:", err)
 				os.Exit(1)

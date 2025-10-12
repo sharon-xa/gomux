@@ -1,0 +1,141 @@
+debug 2025/10/12 19:32:38 main menu subscriber received window size: {Width:111 Height:29}
+debug 2025/10/12 19:32:38 List dimensions: width: 111 - height: 29
+debug 2025/10/12 19:32:38 (WindowSizeMsg) received in main menu: {Width:111 Height:29}
+debug 2025/10/12 19:32:38 After SetSize (WindowSizeMsg) - List dimensions: width: 111 - height: 29
+debug 2025/10/12 19:32:38 (WindowSizeMsg) received in model: {Width:111 Height:29}
+debug 2025/10/12 19:32:38 List dimensions: width: 111 - height: 29
+debug 2025/10/12 19:32:38 main menu subscriber received window size: {Width:111 Height:29}
+debug 2025/10/12 19:32:38 (WindowSizeMsg) received in main menu: {Width:111 Height:29}
+debug 2025/10/12 19:32:38 After SetSize (WindowSizeMsg) - List dimensions: width: 111 - height: 29
+debug 2025/10/12 19:32:39 (WindowSizeMsg) received in model: {Width:189 Height:50}
+debug 2025/10/12 19:32:39 List dimensions: width: 111 - height: 29
+debug 2025/10/12 19:32:39 main menu subscriber received window size: {Width:189 Height:50}
+debug 2025/10/12 19:32:39 (WindowSizeMsg) received in main menu: {Width:189 Height:50}
+debug 2025/10/12 19:32:39 After SetSize (WindowSizeMsg) - List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:32:44 List dimensions: width: 111 - height: 29
+debug 2025/10/12 19:32:44 List dimensions: width: 111 - height: 29
+debug 2025/10/12 19:37:05 main menu subscriber received window size: {Width:189 Height:50}
+debug 2025/10/12 19:37:05 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:37:05 (WindowSizeMsg) received in model: {Width:189 Height:50}
+debug 2025/10/12 19:37:05 main menu subscriber received window size: {Width:189 Height:50}
+debug 2025/10/12 19:37:05 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:37:06 (WindowSizeMsg) received in model: {Width:111 Height:29}
+debug 2025/10/12 19:37:06 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:37:06 main menu subscriber received window size: {Width:111 Height:29}
+debug 2025/10/12 19:37:06 (WindowSizeMsg) received in model: {Width:189 Height:50}
+debug 2025/10/12 19:37:06 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:37:06 main menu subscriber received window size: {Width:189 Height:50}
+debug 2025/10/12 19:37:09 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:37:09 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:41:15 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:41:15 (WindowSizeMsg) received in model: {Width:189 Height:50}
+debug 2025/10/12 19:41:15 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:41:16 (WindowSizeMsg) received in model: {Width:111 Height:29}
+debug 2025/10/12 19:41:16 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:41:17 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:41:18 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:41:18 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:41:18 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:41:18 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:41:18 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:41:19 (WindowSizeMsg) received in model: {Width:189 Height:50}
+debug 2025/10/12 19:41:19 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:41:20 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:41:20 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:43:09 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:43:09 (WindowSizeMsg) received in model: {Width:189 Height:50}
+debug 2025/10/12 19:43:09 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:43:09 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:43:09 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:43:15 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:43:15 (WindowSizeMsg) received in model: {Width:189 Height:50}
+debug 2025/10/12 19:43:15 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:43:16 (WindowSizeMsg) received in model: {Width:111 Height:29}
+debug 2025/10/12 19:43:16 List dimensions: width: 111 - height: 29
+debug 2025/10/12 19:43:18 (WindowSizeMsg) received in model: {Width:189 Height:50}
+debug 2025/10/12 19:43:18 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:43:19 (WindowSizeMsg) received in model: {Width:111 Height:29}
+debug 2025/10/12 19:43:19 List dimensions: width: 111 - height: 29
+debug 2025/10/12 19:43:19 (WindowSizeMsg) received in model: {Width:189 Height:50}
+debug 2025/10/12 19:43:19 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:43:20 (WindowSizeMsg) received in model: {Width:111 Height:29}
+debug 2025/10/12 19:43:20 List dimensions: width: 111 - height: 29
+debug 2025/10/12 19:43:20 (WindowSizeMsg) received in model: {Width:189 Height:50}
+debug 2025/10/12 19:43:20 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:45:17 (WindowSizeMsg) received in model: {Width:111 Height:29}
+debug 2025/10/12 19:45:17 List dimensions: width: 111 - height: 29
+debug 2025/10/12 19:45:20 (WindowSizeMsg) received in model: {Width:86 Height:29}
+debug 2025/10/12 19:45:20 List dimensions: width: 86 - height: 29
+debug 2025/10/12 19:45:21 (WindowSizeMsg) received in model: {Width:86 Height:32}
+debug 2025/10/12 19:45:21 List dimensions: width: 86 - height: 32
+debug 2025/10/12 19:45:22 (WindowSizeMsg) received in model: {Width:86 Height:27}
+debug 2025/10/12 19:45:22 List dimensions: width: 86 - height: 27
+debug 2025/10/12 19:45:24 (WindowSizeMsg) received in model: {Width:189 Height:50}
+debug 2025/10/12 19:45:24 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:45:25 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:45:25 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:46:09 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:46:09 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:46:10 List dimensions: width: 86 - height: 27
+debug 2025/10/12 19:46:11 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:46:11 List dimensions: width: 86 - height: 27
+debug 2025/10/12 19:46:12 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:46:12 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:46:12 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:46:24 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:46:24 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:46:25 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:46:25 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:46:25 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:46:25 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:46:26 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:46:43 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:46:44 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:46:45 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:46:51 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:46:52 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:46:52 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:46:53 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:46:54 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:46:55 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:46:55 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:46:55 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:46:55 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:46:56 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:46:56 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:46:56 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:46:57 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:46:58 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:46:58 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:46:58 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:47:00 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:47:00 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:47:00 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:47:02 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:47:03 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:47:03 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:47:03 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:47:04 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:47:04 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:47:05 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:47:05 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:47:05 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:47:07 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:47:08 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:47:11 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:47:11 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:47:12 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:47:13 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:47:13 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:47:14 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:47:14 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:47:15 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:47:15 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:47:16 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:47:16 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:47:18 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:47:18 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:47:18 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:47:19 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:47:19 List dimensions: width: 189 - height: 50
+debug 2025/10/12 19:47:19 List dimensions: width: 189 - height: 50
