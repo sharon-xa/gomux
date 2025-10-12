@@ -1,3 +1,4 @@
+main
 gomux
 tmux-server.png
-
+*.log
