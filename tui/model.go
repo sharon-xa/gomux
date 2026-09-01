@@ -5,6 +5,8 @@ import (
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/x/term"
+	"github.com/sharon-xa/gomux/internal/models"
+	"github.com/sharon-xa/gomux/tui/commenui"
 	"github.com/sharon-xa/gomux/tui/screens"
 	"github.com/sharon-xa/gomux/tui/shared"
 )
@@ -38,7 +40,7 @@ func NewModel() Model {
 		currentScreen: shared.MAIN_MENU,
 		state:         state,
 		mainMenu:      screens.NewMainMenuModel(width, height),
-		createScript:  screens.NewCreateScriptModel(width, height),
+		createScript:  screens.NewCreateScriptModel(),
 		listScripts:   screens.NewListScriptsModel(width, height),
 		runScript:     screens.NewRunScriptModel(width, height),
 		width:         width,
@@ -55,7 +57,8 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	switch msg := msg.(type) {
 	case tea.WindowSizeMsg:
-		m.mainMenu = m.mainMenu.SetSize(msg.Width, msg.Height)
+		h, v := commenui.PageStyle.GetFrameSize()
+		m.mainMenu = m.mainMenu.SetSize(msg.Width-h, msg.Height-v)
 		m.width = msg.Width
 		m.height = msg.Height
 		return m, nil
@@ -149,9 +152,6 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 		// case shared.SETTINGS:
 		// 	m.settings, cmd = m.settings.Update(msg)
-		//
-		// case shared.EXECUTION_HISTORY:
-		// 	m.executionHistory, cmd = m.executionHistory.Update(msg)
 	}
 
 	return m, cmd
@@ -187,7 +187,7 @@ func (m Model) View() string {
 	}
 }
 
-func (m *Model) GetScripts() []shared.Script {
+func (m *Model) GetScripts() []models.Script {
 	return m.state.Scripts
 }
 

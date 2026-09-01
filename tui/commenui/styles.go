@@ -1,27 +1,31 @@
 package commenui
 
 import (
-	"github.com/charmbracelet/bubbles/list"
 	"github.com/charmbracelet/lipgloss"
 )
 
 var (
-	AppStyle = lipgloss.NewStyle().Padding(1, 2)
+	PageStyle = lipgloss.NewStyle().
+			Margin(2, 2, 2, 2)
 
 	TitleStyle = lipgloss.NewStyle().
 			Foreground(lipgloss.Color("#FAFAFA")).
-			Background(lipgloss.Color("#7D56F4")).
-			Padding(0, 1).
-			MarginBottom(1)
+			Background(lipgloss.Color("#7D56F4"))
 
 	HeaderStyle = lipgloss.NewStyle().
 			Foreground(lipgloss.Color("#04B575")).
-			Bold(true).
-			MarginBottom(1)
+			Bold(true)
+
+	LabelStyle = lipgloss.NewStyle().
+			Foreground(lipgloss.Color("#FAFAFA")).
+			Bold(true)
+
+	FocusedLabelStyle = LabelStyle.Foreground(
+		lipgloss.Color("#7D56F4"),
+	)
 
 	HelpStyle = lipgloss.NewStyle().
-			Foreground(lipgloss.Color("#626262")).
-			MarginTop(1)
+			Foreground(lipgloss.Color("#626262"))
 
 	ErrorStyle = lipgloss.NewStyle().
 			Foreground(lipgloss.Color("#FF0000")).
@@ -32,9 +36,10 @@ var (
 			Bold(true)
 )
 
-func StyleList(l *list.Model) {
-	l.Title = "Gomux - Tmux Script Manager"
-	l.SetShowStatusBar(false)
-	l.SetFilteringEnabled(true)
-	l.Styles.Title = TitleStyle
+func StyledPage(page string) string {
+	return PageStyle.Render(page)
+}
+
+func StyledTitle(title string) string {
+	return TitleStyle.Render(title)
 }

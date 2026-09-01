@@ -8,13 +8,17 @@ type HelpInstructions struct {
 }
 
 var (
-	QuitInstruction    = HelpInstructions{Keys: []string{"q"}, Action: "quit"}
+	QuitInstruction = HelpInstructions{Keys: []string{"q"}, Action: "quit"}
+
+	UpInstuction     = HelpInstructions{Keys: []string{"↑", "k"}, Action: "up"}
+	DownInstuction   = HelpInstructions{Keys: []string{"↓", "j"}, Action: "down"}
+	LeftInstruction  = HelpInstructions{Keys: []string{"←", "h"}, Action: "move left"}
+	RightInstruction = HelpInstructions{Keys: []string{"→", "l"}, Action: "move right"}
+
+	SaveInstruction    = HelpInstructions{Keys: []string{"ctrl+s"}, Action: "save"}
+	CancelInstruction  = HelpInstructions{Keys: []string{"esc"}, Action: "cancel"}
 	SelectInstuction   = HelpInstructions{Keys: []string{"enter"}, Action: "select"}
 	RefreshInstruction = HelpInstructions{Keys: []string{"r"}, Action: "refresh"}
-	UpInstuction       = HelpInstructions{Keys: []string{"↑", "k"}, Action: "up"}
-	DownInstuction     = HelpInstructions{Keys: []string{"↓", "j"}, Action: "down"}
-	LeftInstruction    = HelpInstructions{Keys: []string{"←", "h"}, Action: "move left"}
-	RightInstruction   = HelpInstructions{Keys: []string{"→", "l"}, Action: "move right"}
 )
 
 // Return a styled help message
@@ -35,5 +39,6 @@ func GetHelpMessage(instructions []HelpInstructions) string {
 			b.WriteString(" • ")
 		}
 	}
+
 	return HelpStyle.Render(b.String())
 }

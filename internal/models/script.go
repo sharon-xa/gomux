@@ -11,6 +11,8 @@ type Script struct {
 	Windows        []Window `json:"windows"`
 	StartingWindow int      `json:"startingWindow"` // when the tmux start on which window should we start
 	Panes          []Pane   `json:"panes"`
+
+	// TODO: maybe add some metadata like the created at and updated at timestamps
 }
 
 func NewScript(s Session, ws []Window, sw int, ps []Pane) *Script {

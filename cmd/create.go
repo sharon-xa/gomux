@@ -34,7 +34,8 @@ Examples:
 			actionsInstance = actions.NewActions()
 		},
 		PersistentPostRunE: func(cmd *cobra.Command, args []string) error {
-			return actionsInstance.CreateScript()
+			// return actionsInstance.NewScript()
+			return nil
 		},
 	}
 )
@@ -44,16 +45,17 @@ func newSessionCmd() *cobra.Command {
 		Use:   "session",
 		Short: "Create a new tmux session",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			name, _ := cmd.Flags().GetString("name")
-			dir, _ := cmd.Flags().GetString("dir")
-			typ, _ := cmd.Flags().GetString("type")
+			// name, _ := cmd.Flags().GetString("name")
+			// dir, _ := cmd.Flags().GetString("dir")
+			// typ, _ := cmd.Flags().GetString("type")
 
-			session := models.Session{
-				Name:      name,
-				Directory: dir,
-				Type:      typ,
-			}
-			return actionsInstance.AddSession(&session)
+			// session := models.Session{
+			// 	Name:      name,
+			// 	Directory: dir,
+			// 	Type:      typ,
+			// }
+			// return actionsInstance.AddSession(&session)
+			return nil
 		},
 	}
 
@@ -71,21 +73,22 @@ func newWindowCmd() *cobra.Command {
 		Use:   "window",
 		Short: "Add a window to the current session",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			name, _ := cmd.Flags().GetString("name")
-			number, _ := cmd.Flags().GetInt("number")
-			cmdStr, _ := cmd.Flags().GetString("cmd")
-			layout, _ := cmd.Flags().GetString("layout")
-			sync, _ := cmd.Flags().GetBool("sync")
-
-			w := models.Window{
-				Name:              name,
-				Number:            number,
-				Command:           cmdStr,
-				Layout:            models.Layout(layout),
-				SynchronizedPanes: sync,
-			}
-
-			return actionsInstance.AddWindow(&w)
+			// name, _ := cmd.Flags().GetString("name")
+			// number, _ := cmd.Flags().GetInt("number")
+			// cmdStr, _ := cmd.Flags().GetString("cmd")
+			// layout, _ := cmd.Flags().GetString("layout")
+			// sync, _ := cmd.Flags().GetBool("sync")
+			//
+			// w := models.Window{
+			// 	Name:              name,
+			// 	Number:            number,
+			// 	Command:           cmdStr,
+			// 	Layout:            models.Layout(layout),
+			// 	SynchronizedPanes: sync,
+			// }
+			//
+			// return actionsInstance.AddWindow(&w)
+			return nil
 		},
 	}
 
@@ -103,19 +106,20 @@ func newPaneCmd() *cobra.Command {
 		Use:   "pane",
 		Short: "Add a pane to a window",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			id, _ := cmd.Flags().GetInt("id")
-			location, _ := cmd.Flags().GetInt("window")
-			dir, _ := cmd.Flags().GetString("direction")
-			cmdStr, _ := cmd.Flags().GetString("cmd")
-
-			p := models.Pane{
-				ID:        id,
-				Location:  location,
-				Direction: models.Direction(dir),
-				Command:   cmdStr,
-			}
-
-			return actionsInstance.AddPane(&p)
+			// id, _ := cmd.Flags().GetInt("id")
+			// location, _ := cmd.Flags().GetInt("window")
+			// dir, _ := cmd.Flags().GetString("direction")
+			// cmdStr, _ := cmd.Flags().GetString("cmd")
+			//
+			// p := models.Pane{
+			// 	ID:        id,
+			// 	Location:  location,
+			// 	Direction: models.Direction(dir),
+			// 	Command:   cmdStr,
+			// }
+			//
+			// return actionsInstance.AddPane(&p)
+			return nil
 		},
 	}
 

@@ -1,23 +1,10 @@
 package shared
 
 import (
-	"strings"
 	"time"
-)
 
-// Script represents a script in the system
-type Script struct {
-	ID          string     `json:"id"`
-	Name        string     `json:"name"`
-	Description string     `json:"description"`
-	Content     string     `json:"content"`
-	Language    string     `json:"language"`
-	Tags        []string   `json:"tags"`
-	CreatedAt   time.Time  `json:"created_at"`
-	UpdatedAt   time.Time  `json:"updated_at"`
-	LastRunAt   *time.Time `json:"last_run_at,omitempty"`
-	Favorite    bool       `json:"favorite"`
-}
+	"github.com/sharon-xa/gomux/internal/models"
+)
 
 // ScriptExecutionResult represents the result of running a script
 type ScriptExecutionResult struct {
@@ -50,27 +37,12 @@ type Theme struct {
 	TextColor       string `json:"text_color"`
 }
 
-// Helper methods for Script
-func (s *Script) MarkRun() {
-	now := time.Now()
-	s.LastRunAt = &now
-}
-
-func (s *Script) Update(name, description, content string, tags []string) {
-	s.Name = name
-	s.Description = description
-	s.Content = content
-	s.Tags = tags
-	s.UpdatedAt = time.Now()
-}
-
 func (a *AppState) AddExecutionResult(result ScriptExecutionResult) {
 	result.Timestamp = time.Now()
 	a.ExecutionHistory = append(a.ExecutionHistory, result)
 
 	// Update script's last run time
 	if script := a.GetScriptByID(result.ScriptID); script != nil {
-		script.MarkRun()
 	}
 }
 
@@ -79,24 +51,8 @@ func (a *AppState) GetRecentExecutions(limit int) []ScriptExecutionResult {
 	return a.ExecutionHistory[start:]
 }
 
-func (a *AppState) FilterScripts(query string, tags []string) []Script {
-	filtered := []Script{}
-
-	for _, script := range a.Scripts {
-		// Check query match
-		matchesQuery := query == "" ||
-			strings.Contains(script.Name, query) ||
-			strings.Contains(script.Description, query)
-
-		// Check tags match
-		matchesTags := len(tags) == 0 || hasAllTags(script.Tags, tags)
-
-		if matchesQuery && matchesTags {
-			filtered = append(filtered, script)
-		}
-	}
-
-	return filtered
+func (a *AppState) FilterScripts(query string, tags []string) []models.Script {
+	return nil
 }
 
 func hasAllTags(scriptTags, filterTags []string) bool {

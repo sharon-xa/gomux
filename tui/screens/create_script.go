@@ -7,12 +7,12 @@ import (
 	"github.com/charmbracelet/bubbles/textarea"
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/lipgloss"
-	"github.com/google/uuid"
+	"github.com/sharon-xa/gomux/internal/models"
+	"github.com/sharon-xa/gomux/pkg/actions"
+	"github.com/sharon-xa/gomux/tui/commenui"
 	"github.com/sharon-xa/gomux/tui/shared"
 )
 
-// CreateScriptModel represents the create script screen
 // Note: This only stores UI state, NOT the actual scripts list
 type CreateScriptModel struct {
 	// Form fields (local UI state only)
@@ -21,6 +21,7 @@ type CreateScriptModel struct {
 	contentInput     textarea.Model
 	tagsInput        textinput.Model
 	languageInput    textinput.Model
+	actions          actions.IActions
 
 	// UI state
 	focusedField int
@@ -38,29 +39,29 @@ const (
 )
 
 // NewCreateScriptModel creates a new create script model
-func NewCreateScriptModel(width, height int) CreateScriptModel {
-	// Initialize name input
+func NewCreateScriptModel() CreateScriptModel {
+	// name input
 	nameInput := textinput.New()
 	nameInput.Placeholder = "My Script"
 	nameInput.Focus()
 	nameInput.CharLimit = 100
 
-	// Initialize description input
+	// description input
 	descInput := textinput.New()
 	descInput.Placeholder = "What does this script do?"
 	descInput.CharLimit = 200
 
-	// Initialize language input
+	// language input
 	langInput := textinput.New()
 	langInput.Placeholder = "bash"
 	langInput.CharLimit = 20
 
-	// Initialize tags input
+	// tags input
 	tagsInput := textinput.New()
 	tagsInput.Placeholder = "tag1, tag2, tag3"
 	tagsInput.CharLimit = 100
 
-	// Initialize content textarea
+	// content textarea
 	contentInput := textarea.New()
 	contentInput.Placeholder = "#!/bin/bash\necho 'Hello World'"
 	contentInput.SetHeight(10)
@@ -72,6 +73,7 @@ func NewCreateScriptModel(width, height int) CreateScriptModel {
 		tagsInput:        tagsInput,
 		contentInput:     contentInput,
 		focusedField:     nameField,
+		actions:          actions.NewActions(),
 	}
 }
 
@@ -82,8 +84,6 @@ func (m CreateScriptModel) Init() tea.Cmd {
 
 // Update handles messages for the create script screen
 func (m CreateScriptModel) Update(msg tea.Msg) (CreateScriptModel, tea.Cmd) {
-	var cmds []tea.Cmd
-
 	switch msg := msg.(type) {
 	case tea.WindowSizeMsg:
 		m.width = msg.Width
@@ -112,30 +112,27 @@ func (m CreateScriptModel) Update(msg tea.Msg) (CreateScriptModel, tea.Cmd) {
 		}
 	}
 
-	// Update the focused field
+	var cmd tea.Cmd
+	var cmds []tea.Cmd
+
 	switch m.focusedField {
 	case nameField:
-		var cmd tea.Cmd
 		m.nameInput, cmd = m.nameInput.Update(msg)
 		cmds = append(cmds, cmd)
 
 	case descriptionField:
-		var cmd tea.Cmd
 		m.descriptionInput, cmd = m.descriptionInput.Update(msg)
 		cmds = append(cmds, cmd)
 
 	case languageField:
-		var cmd tea.Cmd
 		m.languageInput, cmd = m.languageInput.Update(msg)
 		cmds = append(cmds, cmd)
 
 	case tagsField:
-		var cmd tea.Cmd
 		m.tagsInput, cmd = m.tagsInput.Update(msg)
 		cmds = append(cmds, cmd)
 
 	case contentField:
-		var cmd tea.Cmd
 		m.contentInput, cmd = m.contentInput.Update(msg)
 		cmds = append(cmds, cmd)
 	}
@@ -210,101 +207,78 @@ func (m CreateScriptModel) saveScript() tea.Cmd {
 		language = "bash"
 	}
 
-	// Create the script object
-	script := shared.Script{
-		ID:          uuid.New().String(),
-		Name:        strings.TrimSpace(m.nameInput.Value()),
-		Description: strings.TrimSpace(m.descriptionInput.Value()),
-		Content:     m.contentInput.Value(),
-		Language:    language,
-		Tags:        tags,
-		Favorite:    false,
+	session := models.Session{}
+	window := models.Window{}
+	startingWindow := 1
+	pane := models.Pane{}
+
+	script, err := m.actions.NewScript(
+		session,
+		[]models.Window{window},
+		startingWindow,
+		[]models.Pane{pane},
+	)
+	if err != nil {
+		// handle error
 	}
 
 	// Return a command that sends ScriptCreatedMsg
-	// The Root Model will handle adding it to the shared state
 	return func() tea.Msg {
-		return shared.ScriptCreatedMsg{Script: script}
+		return shared.ScriptCreatedMsg{Script: *script}
 	}
 }
 
-// View renders the create script screen
 func (m CreateScriptModel) View() string {
-	titleStyle := lipgloss.NewStyle().
-		Bold(true).
-		Foreground(lipgloss.Color("#00ADD8")).
-		MarginBottom(1)
-
-	labelStyle := lipgloss.NewStyle().
-		Foreground(lipgloss.Color("#FFFFFF")).
-		Bold(true)
-
-	focusedLabelStyle := labelStyle.Foreground(
-		lipgloss.Color("#00ADD8"),
-	)
-
-	helpStyle := lipgloss.NewStyle().
-		Foreground(lipgloss.Color("#666666")).
-		MarginTop(1)
-
-	errorStyle := lipgloss.NewStyle().
-		Foreground(lipgloss.Color("#FF0000")).
-		Bold(true)
-
 	var s strings.Builder
 
-	// Title
-	s.WriteString(titleStyle.Render("📝 Create New Script"))
+	s.WriteString(commenui.StyledTitle("📝 Create New Script"))
 	s.WriteString("\n\n")
 
-	// Name field
-	nameLabel := labelStyle.Render("Name:")
+	nameLabel := commenui.LabelStyle.Render("Name:")
 	if m.focusedField == nameField {
-		nameLabel = focusedLabelStyle.Render("Name:")
+		nameLabel = commenui.FocusedLabelStyle.Render("Name:")
 	}
 	s.WriteString(nameLabel + "\n")
 	s.WriteString(m.nameInput.View() + "\n\n")
 
-	// Description field
-	descLabel := labelStyle.Render("Description:")
+	descLabel := commenui.LabelStyle.Render("Description:")
 	if m.focusedField == descriptionField {
-		descLabel = focusedLabelStyle.Render("Description:")
+		descLabel = commenui.FocusedLabelStyle.Render("Description:")
 	}
 	s.WriteString(descLabel + "\n")
 	s.WriteString(m.descriptionInput.View() + "\n\n")
 
-	// Language field
-	langLabel := labelStyle.Render("Language:")
+	langLabel := commenui.LabelStyle.Render("Language:")
 	if m.focusedField == languageField {
-		langLabel = focusedLabelStyle.Render("Language:")
+		langLabel = commenui.FocusedLabelStyle.Render("Language:")
 	}
 	s.WriteString(langLabel + "\n")
 	s.WriteString(m.languageInput.View() + "\n\n")
 
-	// Tags field
-	tagsLabel := labelStyle.Render("Tags (comma-separated):")
+	tagsLabel := commenui.LabelStyle.Render("Tags (comma-separated):")
 	if m.focusedField == tagsField {
-		tagsLabel = focusedLabelStyle.Render("Tags (comma-separated):")
+		tagsLabel = commenui.FocusedLabelStyle.Render("Tags (comma-separated):")
 	}
 	s.WriteString(tagsLabel + "\n")
 	s.WriteString(m.tagsInput.View() + "\n\n")
 
-	// Content field
-	contentLabel := labelStyle.Render("Content:")
+	contentLabel := commenui.LabelStyle.Render("Content:")
 	if m.focusedField == contentField {
-		contentLabel = focusedLabelStyle.Render("Content:")
+		contentLabel = commenui.FocusedLabelStyle.Render("Content:")
 	}
 	s.WriteString(contentLabel + "\n")
 	s.WriteString(m.contentInput.View() + "\n\n")
 
-	// Error message
 	if m.err != nil {
-		s.WriteString(errorStyle.Render("❌ "+m.err.Error()) + "\n\n")
+		s.WriteString(commenui.ErrorStyle.Render("❌ "+m.err.Error()) + "\n\n")
 	}
 
-	// Help text
-	help := helpStyle.Render("tab/shift+tab navigate • ctrl+s save • esc cancel")
-	s.WriteString(help)
+	helpMsg := commenui.GetHelpMessage([]commenui.HelpInstructions{
+		{Keys: []string{"tab", "shift+tab"}, Action: "navigate"},
+		commenui.SaveInstruction,
+		commenui.CancelInstruction,
+	})
+	s.WriteString(helpMsg)
 
-	return s.String()
+	return commenui.StyledPage(s.String())
 }

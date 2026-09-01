@@ -11,11 +11,11 @@ type Session struct {
 	Type      string `json:"type"`      // Make sure to sanitaize this field, it will become a folder name
 }
 
-func NewSession(name, dir, typ string) *Session {
+func NewSession(name, dir, sType string) *Session {
 	return &Session{
 		Name:      name,
 		Directory: dir,
-		Type:      typ,
+		Type:      sType,
 	}
 }
 

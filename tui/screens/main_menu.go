@@ -1,8 +1,6 @@
 package screens
 
 import (
-	"log"
-
 	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/sharon-xa/gomux/tui/commenui"
@@ -79,7 +77,6 @@ func NewMainMenuModel(width, height int) MainMenuModel {
 	}
 
 	l := list.New(items, list.NewDefaultDelegate(), width, height)
-	commenui.StyleList(&l)
 	return MainMenuModel{
 		list:   l,
 		width:  width,
@@ -136,6 +133,10 @@ func (m MainMenuModel) handleSelection() tea.Cmd {
 }
 
 func (m MainMenuModel) View() string {
-	log.Printf("List dimensions: width: %d - height: %d", m.list.Width(), m.list.Height())
-	return m.list.View()
+	m.list.Title = "Gomux - Tmux Script Manager"
+	m.list.Styles.Title = commenui.TitleStyle
+	m.list.SetShowStatusBar(false)
+	m.list.SetFilteringEnabled(true)
+
+	return commenui.StyledPage(m.list.View())
 }

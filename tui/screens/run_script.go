@@ -1,9 +1,11 @@
 package screens
 
-import "github.com/sharon-xa/gomux/tui/shared"
+import (
+	"github.com/sharon-xa/gomux/internal/models"
+)
 
 type RunScriptModel struct {
-	scripts []shared.Script
+	scripts []models.Script
 
 	cursor int
 	width  int
@@ -12,14 +14,14 @@ type RunScriptModel struct {
 
 func NewRunScriptModel(width, height int) RunScriptModel {
 	return RunScriptModel{
-		scripts: []shared.Script{},
+		scripts: []models.Script{},
 		cursor:  0,
 	}
 }
 
-func NewRunScriptModelWithScript(script shared.Script) RunScriptModel {
+func NewRunScriptModelWithScript(script models.Script) RunScriptModel {
 	return RunScriptModel{
-		scripts: []shared.Script{
+		scripts: []models.Script{
 			script,
 		},
 		cursor: 1,

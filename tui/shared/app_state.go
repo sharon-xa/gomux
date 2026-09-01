@@ -1,11 +1,13 @@
 package shared
 
-import "time"
+import (
+	"github.com/sharon-xa/gomux/internal/models"
+)
 
 // AppState holds all shared application state
 // This lives in the Root Model
 type AppState struct {
-	Scripts          []Script                `json:"scripts"`
+	Scripts          []models.Script         `json:"scripts"`
 	ExecutionHistory []ScriptExecutionResult `json:"execution_history"`
 	Settings         Settings                `json:"settings"`
 	CurrentScriptID  string                  `json:"current_script_id"` // ID of script being edited/run
@@ -18,7 +20,7 @@ type AppState struct {
 // NewDefaultAppState creates a new AppState with sensible defaults
 func NewDefaultAppState() AppState {
 	return AppState{
-		Scripts:          []Script{},
+		Scripts:          []models.Script{},
 		ExecutionHistory: []ScriptExecutionResult{},
 		Settings: Settings{
 			Theme: Theme{
@@ -43,39 +45,18 @@ func NewDefaultAppState() AppState {
 	}
 }
 
-func (a *AppState) GetScriptByID(id string) *Script {
-	for i := range a.Scripts {
-		if a.Scripts[i].ID == id {
-			return &a.Scripts[i]
-		}
-	}
+func (a *AppState) GetScriptByID(id string) *models.Script {
 	return nil
 }
 
-func (a *AppState) AddScript(script Script) {
-	script.CreatedAt = time.Now()
-	script.UpdatedAt = time.Now()
+func (a *AppState) AddScript(script models.Script) {
 	a.Scripts = append(a.Scripts, script)
 }
 
-func (a *AppState) UpdateScript(id string, script Script) bool {
-	for i := range a.Scripts {
-		if a.Scripts[i].ID == id {
-			script.UpdatedAt = time.Now()
-			script.CreatedAt = a.Scripts[i].CreatedAt // preserve creation time
-			a.Scripts[i] = script
-			return true
-		}
-	}
+func (a *AppState) UpdateScript(id string, script models.Script) bool {
 	return false
 }
 
 func (a *AppState) DeleteScript(id string) bool {
-	for i := range a.Scripts {
-		if a.Scripts[i].ID == id {
-			a.Scripts = append(a.Scripts[:i], a.Scripts[i+1:]...)
-			return true
-		}
-	}
 	return false
 }
