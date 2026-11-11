@@ -3,6 +3,9 @@
 Goal: describe a tmux workspace once (session → windows → panes → commands),
 then open it with one command, from the CLI or the TUI.
 
+**Status (2026-11-11):** M0 done, and the package restructure (steps 1–3) is done.
+**Next:** the quick wins (start with the `ctrl+s` crash), then M1, until `just test-fixture single-window` is green.
+
 **How to use this file**
 - Work top to bottom. Each milestone leaves the app *working*, just with less in it.
 - A milestone is done when its tests are green. Run them with `just test-fixture <name>`.

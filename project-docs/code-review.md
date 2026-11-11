@@ -2,7 +2,18 @@
 
 _Reviewed: 2026-11-11 · commit `854153b` ("upload latest code") · ~2.1k lines of Go_
 _First pass was on `035f681`; see [What changed since the first pass](#what-changed-since-the-first-pass)._
-_Since then, `internal/models` has been split. Rendering (`Stringify` → `render.Bash`, the constants and helpers) is now in `internal/render/bash.go`, and the types are in `internal/workspace/`. Restructure step 2 then renamed `internal/database` → `internal/store`, moved `pkg/actions` → `internal/actions`, moved validation and its errors onto `workspace` (deleting `gomuxerr`), and fixed 5.1 and 5.5. Step 3 moved `tui/` → `internal/tui/` and renamed `commenui` → `style` and `shared` → `messages`. File and line references below are for `854153b`._
+_File and line references below are for `854153b`. The review is kept as a snapshot; open items are tracked in `project-docs/todo.md`._
+
+> **Status since this review** (2026-11-11)
+> - **Tests added** (TL;DR item 5 is resolved): generator syntax and golden tests, real-tmux integration tests, and workspace/actions tests. The generator tests fail by design until milestones M1–M5.
+> - **Restructured:**
+>   - `internal/models` split into `internal/workspace` (types, `Validate`, `ApplyDefaults`) and `internal/render` (`Stringify` → `render.Bash`).
+>   - `internal/database` → `internal/store`, which no longer renders.
+>   - `pkg/actions` → `internal/actions`, without `IActions`.
+>   - `gomuxerr` → `workspace.Err*`.
+>   - `tui/` → `internal/tui/`, with `commenui` → `style` and `shared` → `messages`.
+> - **Fixed:** 5.1 (defaults lost), 5.3 (validation on the spec), 5.4 (`pkg/` depending on `internal/`), 5.5 (error naming and case), 5.6 (rendering in models and storage).
+> - **Still open:** everything in sections 1–4, including the generator, the TUI crash on save (3.1), and storage naming and sanitizing.
 
 **Method:** I read every Go file. `go build` and `go vet` both pass. I also:
 - rendered a sample script from `internal/models` and ran it through `bash -n`

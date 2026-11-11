@@ -45,4 +45,9 @@ Many tests are **expected to fail** until their milestone is done. Don't "fix" a
 - Errors live in the package that owns them (`workspace.ErrSessionNameRequired`), not in a shared errors package. Messages are lowercase.
 - Every bug fix comes with a test or fixture that would have caught it.
 - Commits: small, one concern each, Conventional Commit prefixes (`feat:`, `fix:`, `test:`, `docs:`, `build:`, `chore:`).
-- When a roadmap item is done, tick it in `project-docs/todo.md` in the same commit.
+- When a roadmap item is done, tick it in `project-docs/todo.md` in the same commit, and update its **Status** line when a milestone finishes.
+- Git workflow:
+  - Only commit when the user asks.
+  - Commit on a short-lived branch, then `git merge --ff-only` into `main` and delete the branch.
+  - Never push; the user pushes.
+- Before committing a behaviour-preserving refactor, compare before and after: test outcomes, generated script output, and (for TUI changes) screen captures from an isolated tmux server.
