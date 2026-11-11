@@ -1,4 +1,4 @@
-package shared
+package messages
 
 type ErrorMsg struct {
 	Err error

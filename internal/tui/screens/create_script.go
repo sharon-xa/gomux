@@ -8,9 +8,9 @@ import (
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/sharon-xa/gomux/internal/actions"
+	"github.com/sharon-xa/gomux/internal/tui/messages"
+	"github.com/sharon-xa/gomux/internal/tui/style"
 	"github.com/sharon-xa/gomux/internal/workspace"
-	"github.com/sharon-xa/gomux/tui/commenui"
-	"github.com/sharon-xa/gomux/tui/shared"
 )
 
 // Note: This only stores UI state, NOT the actual scripts list
@@ -95,7 +95,7 @@ func (m CreateScriptModel) Update(msg tea.Msg) (CreateScriptModel, tea.Cmd) {
 		case "esc":
 			// Go back to main menu without saving
 			return m, func() tea.Msg {
-				return shared.BackMsg{}
+				return messages.BackMsg{}
 			}
 
 		case "ctrl+s":
@@ -224,61 +224,61 @@ func (m CreateScriptModel) saveScript() tea.Cmd {
 
 	// Return a command that sends ScriptCreatedMsg
 	return func() tea.Msg {
-		return shared.ScriptCreatedMsg{Script: *script}
+		return messages.ScriptCreatedMsg{Script: *script}
 	}
 }
 
 func (m CreateScriptModel) View() string {
 	var s strings.Builder
 
-	s.WriteString(commenui.StyledTitle("📝 Create New Script"))
+	s.WriteString(style.StyledTitle("📝 Create New Script"))
 	s.WriteString("\n\n")
 
-	nameLabel := commenui.LabelStyle.Render("Name:")
+	nameLabel := style.LabelStyle.Render("Name:")
 	if m.focusedField == nameField {
-		nameLabel = commenui.FocusedLabelStyle.Render("Name:")
+		nameLabel = style.FocusedLabelStyle.Render("Name:")
 	}
 	s.WriteString(nameLabel + "\n")
 	s.WriteString(m.nameInput.View() + "\n\n")
 
-	descLabel := commenui.LabelStyle.Render("Description:")
+	descLabel := style.LabelStyle.Render("Description:")
 	if m.focusedField == descriptionField {
-		descLabel = commenui.FocusedLabelStyle.Render("Description:")
+		descLabel = style.FocusedLabelStyle.Render("Description:")
 	}
 	s.WriteString(descLabel + "\n")
 	s.WriteString(m.descriptionInput.View() + "\n\n")
 
-	langLabel := commenui.LabelStyle.Render("Language:")
+	langLabel := style.LabelStyle.Render("Language:")
 	if m.focusedField == languageField {
-		langLabel = commenui.FocusedLabelStyle.Render("Language:")
+		langLabel = style.FocusedLabelStyle.Render("Language:")
 	}
 	s.WriteString(langLabel + "\n")
 	s.WriteString(m.languageInput.View() + "\n\n")
 
-	tagsLabel := commenui.LabelStyle.Render("Tags (comma-separated):")
+	tagsLabel := style.LabelStyle.Render("Tags (comma-separated):")
 	if m.focusedField == tagsField {
-		tagsLabel = commenui.FocusedLabelStyle.Render("Tags (comma-separated):")
+		tagsLabel = style.FocusedLabelStyle.Render("Tags (comma-separated):")
 	}
 	s.WriteString(tagsLabel + "\n")
 	s.WriteString(m.tagsInput.View() + "\n\n")
 
-	contentLabel := commenui.LabelStyle.Render("Content:")
+	contentLabel := style.LabelStyle.Render("Content:")
 	if m.focusedField == contentField {
-		contentLabel = commenui.FocusedLabelStyle.Render("Content:")
+		contentLabel = style.FocusedLabelStyle.Render("Content:")
 	}
 	s.WriteString(contentLabel + "\n")
 	s.WriteString(m.contentInput.View() + "\n\n")
 
 	if m.err != nil {
-		s.WriteString(commenui.ErrorStyle.Render("❌ "+m.err.Error()) + "\n\n")
+		s.WriteString(style.ErrorStyle.Render("❌ "+m.err.Error()) + "\n\n")
 	}
 
-	helpMsg := commenui.GetHelpMessage([]commenui.HelpInstructions{
+	helpMsg := style.GetHelpMessage([]style.HelpInstructions{
 		{Keys: []string{"tab", "shift+tab"}, Action: "navigate"},
-		commenui.SaveInstruction,
-		commenui.CancelInstruction,
+		style.SaveInstruction,
+		style.CancelInstruction,
 	})
 	s.WriteString(helpMsg)
 
-	return commenui.StyledPage(s.String())
+	return style.StyledPage(s.String())
 }

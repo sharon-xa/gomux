@@ -1,4 +1,4 @@
-package commenui
+package style
 
 import (
 	"github.com/charmbracelet/lipgloss"

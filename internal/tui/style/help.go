@@ -1,4 +1,4 @@
-package commenui
+package style
 
 import "strings"
 

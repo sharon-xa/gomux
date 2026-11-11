@@ -7,8 +7,8 @@ import (
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
+	"github.com/sharon-xa/gomux/internal/tui/messages"
 	"github.com/sharon-xa/gomux/internal/workspace"
-	"github.com/sharon-xa/gomux/tui/shared"
 )
 
 // ListScriptsModel represents the list scripts screen
@@ -66,7 +66,7 @@ func (m ListScriptsModel) Update(msg tea.Msg) (ListScriptsModel, tea.Cmd) {
 				if len(m.scripts) > 0 {
 					scriptID := m.scripts[m.cursor]
 					return m, func() tea.Msg {
-						return shared.NewScreenChange(shared.EDIT_SCRIPT, scriptID)
+						return messages.NewScreenChange(messages.EDIT_SCRIPT, scriptID)
 					}
 				}
 			case "r":
@@ -74,14 +74,14 @@ func (m ListScriptsModel) Update(msg tea.Msg) (ListScriptsModel, tea.Cmd) {
 				if len(m.scripts) > 0 {
 					scriptID := m.scripts[m.cursor]
 					return m, func() tea.Msg {
-						return shared.NewScreenChange(shared.RUN_SCRIPT, scriptID)
+						return messages.NewScreenChange(messages.RUN_SCRIPT, scriptID)
 					}
 				}
 			case "d":
 				// Delete selected script
 				if len(m.scripts) > 0 {
 					return m, func() tea.Msg {
-						return shared.ScriptDeletedMsg{ScriptID: ""}
+						return messages.ScriptDeletedMsg{ScriptID: ""}
 					}
 				}
 			}
@@ -109,7 +109,7 @@ func (m ListScriptsModel) Update(msg tea.Msg) (ListScriptsModel, tea.Cmd) {
 			if len(m.scripts) > 0 {
 				scriptID := m.scripts[m.cursor]
 				return m, func() tea.Msg {
-					return shared.NewScreenChange(shared.EDIT_SCRIPT, scriptID)
+					return messages.NewScreenChange(messages.EDIT_SCRIPT, scriptID)
 				}
 			}
 
@@ -118,28 +118,28 @@ func (m ListScriptsModel) Update(msg tea.Msg) (ListScriptsModel, tea.Cmd) {
 			if len(m.scripts) > 0 {
 				scriptID := m.scripts[m.cursor]
 				return m, func() tea.Msg {
-					return shared.NewScreenChange(shared.RUN_SCRIPT, scriptID)
+					return messages.NewScreenChange(messages.RUN_SCRIPT, scriptID)
 				}
 			}
 
 		case "n":
 			// Create new script
 			return m, func() tea.Msg {
-				return shared.NewScreenChange(shared.CREATE_SCRIPT, nil)
+				return messages.NewScreenChange(messages.CREATE_SCRIPT, nil)
 			}
 
 		case "d":
 			// Delete script
 			if len(m.scripts) > 0 {
 				return m, func() tea.Msg {
-					return shared.ScriptDeletedMsg{ScriptID: ""}
+					return messages.ScriptDeletedMsg{ScriptID: ""}
 				}
 			}
 
 		case "esc", "q":
 			// Go back to main menu
 			return m, func() tea.Msg {
-				return shared.BackMsg{}
+				return messages.BackMsg{}
 			}
 
 		case "ctrl+c":

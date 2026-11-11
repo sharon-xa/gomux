@@ -5,15 +5,15 @@ import (
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/x/term"
+	"github.com/sharon-xa/gomux/internal/tui/messages"
+	"github.com/sharon-xa/gomux/internal/tui/screens"
+	"github.com/sharon-xa/gomux/internal/tui/style"
 	"github.com/sharon-xa/gomux/internal/workspace"
-	"github.com/sharon-xa/gomux/tui/commenui"
-	"github.com/sharon-xa/gomux/tui/screens"
-	"github.com/sharon-xa/gomux/tui/shared"
 )
 
 type Model struct {
-	currentScreen shared.ScreenState
-	state         shared.AppState
+	currentScreen messages.ScreenState
+	state         AppState
 
 	mainMenu     screens.MainMenuModel
 	createScript screens.CreateScriptModel
@@ -28,7 +28,7 @@ type Model struct {
 }
 
 func NewModel() Model {
-	state := shared.NewDefaultAppState()
+	state := NewDefaultAppState()
 
 	width, height, err := term.GetSize(os.Stdout.Fd())
 	if err != nil {
@@ -37,7 +37,7 @@ func NewModel() Model {
 	}
 
 	return Model{
-		currentScreen: shared.MAIN_MENU,
+		currentScreen: messages.MAIN_MENU,
 		state:         state,
 		mainMenu:      screens.NewMainMenuModel(width, height),
 		createScript:  screens.NewCreateScriptModel(),
@@ -57,7 +57,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	switch msg := msg.(type) {
 	case tea.WindowSizeMsg:
-		h, v := commenui.PageStyle.GetFrameSize()
+		h, v := style.PageStyle.GetFrameSize()
 		m.mainMenu = m.mainMenu.SetSize(msg.Width-h, msg.Height-v)
 		m.width = msg.Width
 		m.height = msg.Height
@@ -68,18 +68,18 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, tea.Quit
 		}
 
-	case shared.ScreenChangeMsg:
+	case messages.ScreenChangeMsg:
 		m.currentScreen = msg.Screen
 
 		switch msg.Screen {
-		// case shared.EDIT_SCRIPT:
+		// case messages.EDIT_SCRIPT:
 		// 	if scriptID, ok := msg.Data.(string); ok {
 		// 		m.state.CurrentScriptID = scriptID
 		// 		if script := m.state.GetScriptByID(scriptID); script != nil {
 		// 			m.editScript = screens.NewEditScriptModelWithScript(*script)
 		// 		}
 		// 	}
-		case shared.RUN_SCRIPT:
+		case messages.RUN_SCRIPT:
 			if scriptID, ok := msg.Data.(string); ok {
 				m.state.CurrentScriptID = scriptID
 				if script := m.state.GetScriptByID(scriptID); script != nil {
@@ -87,70 +87,70 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				}
 			}
 
-		case shared.LIST_SCRIPTS:
+		case messages.LIST_SCRIPTS:
 			m.listScripts = screens.NewListScriptsModelWithScripts(m.state.Scripts)
 
-		case shared.MAIN_MENU:
+		case messages.MAIN_MENU:
 			m.state.CurrentScriptID = ""
 		}
 
 		return m, nil
 
-	case shared.ScriptCreatedMsg:
+	case messages.ScriptCreatedMsg:
 		m.state.AddScript(msg.Script)
-		m.currentScreen = shared.LIST_SCRIPTS
+		m.currentScreen = messages.LIST_SCRIPTS
 		m.listScripts = screens.NewListScriptsModelWithScripts(m.state.Scripts)
 		return m, nil
 
-	// case shared.ScriptUpdatedMsg:
+	// case messages.ScriptUpdatedMsg:
 	// 	// Update script in state
 	// 	m.state.UpdateScript(msg.ScriptID, msg.Script)
 	// 	// Navigate back to list
-	// 	m.currentScreen = shared.LIST_SCRIPTS
+	// 	m.currentScreen = messages.LIST_SCRIPTS
 	// 	m.listScripts = screens.NewListScriptsModelWithScripts(m.state.Scripts)
 	// 	return m, nil
 	//
-	// case shared.ScriptDeletedMsg:
+	// case messages.ScriptDeletedMsg:
 	// 	// Delete script from state
 	// 	m.state.DeleteScript(msg.ScriptID)
 	// 	// Refresh list
 	// 	m.listScripts = screens.NewListScriptsModelWithScripts(m.state.Scripts)
 	// 	return m, nil
 
-	case shared.ScriptExecutionCompleteMsg:
+	case messages.ScriptExecutionCompleteMsg:
 		m.state.AddExecutionResult(msg.Result)
 		return m, nil
 
-	case shared.SettingsUpdatedMsg:
+	case messages.SettingsUpdatedMsg:
 		m.state.Settings = msg.Settings
 		return m, nil
 
-	case shared.BackMsg:
-		m.currentScreen = shared.MAIN_MENU
+	case messages.BackMsg:
+		m.currentScreen = messages.MAIN_MENU
 		return m, nil
 
-	case shared.ErrorMsg:
+	case messages.ErrorMsg:
 		m.state.LastError = msg.Error()
 		return m, nil
 	}
 
 	switch m.currentScreen {
-	case shared.MAIN_MENU:
+	case messages.MAIN_MENU:
 		m.mainMenu, cmd = m.mainMenu.Update(msg)
 
-	case shared.CREATE_SCRIPT:
+	case messages.CREATE_SCRIPT:
 		m.createScript, cmd = m.createScript.Update(msg)
 
-	// case shared.EDIT_SCRIPT:
+	// case messages.EDIT_SCRIPT:
 	// 	m.editScript, cmd = m.editScript.Update(msg)
 	//
-	// case shared.RUN_SCRIPT:
+	// case messages.RUN_SCRIPT:
 	// 	m.runScript, cmd = m.runScript.Update(msg)
 
-	case shared.LIST_SCRIPTS:
+	case messages.LIST_SCRIPTS:
 		m.listScripts, cmd = m.listScripts.Update(msg)
 
-		// case shared.SETTINGS:
+		// case messages.SETTINGS:
 		// 	m.settings, cmd = m.settings.Update(msg)
 	}
 
@@ -161,25 +161,25 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 func (m Model) View() string {
 	// Delegate to current screen
 	switch m.currentScreen {
-	case shared.MAIN_MENU:
+	case messages.MAIN_MENU:
 		return m.mainMenu.View()
 
-	case shared.CREATE_SCRIPT:
+	case messages.CREATE_SCRIPT:
 		return m.createScript.View()
 
-	// case shared.EDIT_SCRIPT:
+	// case messages.EDIT_SCRIPT:
 	// 	return m.editScript.View()
 
-	case shared.RUN_SCRIPT:
+	case messages.RUN_SCRIPT:
 		return m.runScript.View()
 
-	case shared.LIST_SCRIPTS:
+	case messages.LIST_SCRIPTS:
 		return m.listScripts.View()
 
-	// case shared.SETTINGS:
+	// case messages.SETTINGS:
 	// 	return m.settings.View()
 	//
-	// case shared.EXECUTION_HISTORY:
+	// case messages.EXECUTION_HISTORY:
 	// 	return m.executionHistory.View()
 
 	default:
@@ -191,10 +191,10 @@ func (m *Model) GetScripts() []workspace.Script {
 	return m.state.Scripts
 }
 
-func (m *Model) GetSettings() shared.Settings {
+func (m *Model) GetSettings() messages.Settings {
 	return m.state.Settings
 }
 
-func (m *Model) GetExecutionHistory() []shared.ScriptExecutionResult {
+func (m *Model) GetExecutionHistory() []messages.ScriptExecutionResult {
 	return m.state.ExecutionHistory
 }

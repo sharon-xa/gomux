@@ -1,9 +1,7 @@
-package shared
+package messages
 
 import (
 	"time"
-
-	"github.com/sharon-xa/gomux/internal/workspace"
 )
 
 // ScriptExecutionResult represents the result of running a script
@@ -35,37 +33,4 @@ type Theme struct {
 	SecondaryColor  string `json:"secondary_color"`
 	BackgroundColor string `json:"background_color"`
 	TextColor       string `json:"text_color"`
-}
-
-func (a *AppState) AddExecutionResult(result ScriptExecutionResult) {
-	result.Timestamp = time.Now()
-	a.ExecutionHistory = append(a.ExecutionHistory, result)
-
-	// Update script's last run time
-	if script := a.GetScriptByID(result.ScriptID); script != nil {
-	}
-}
-
-func (a *AppState) GetRecentExecutions(limit int) []ScriptExecutionResult {
-	start := max(len(a.ExecutionHistory)-limit, 0)
-	return a.ExecutionHistory[start:]
-}
-
-func (a *AppState) FilterScripts(query string, tags []string) []workspace.Script {
-	return nil
-}
-
-func hasAllTags(scriptTags, filterTags []string) bool {
-	tagMap := make(map[string]bool)
-	for _, tag := range scriptTags {
-		tagMap[tag] = true
-	}
-
-	for _, filterTag := range filterTags {
-		if !tagMap[filterTag] {
-			return false
-		}
-	}
-
-	return true
 }

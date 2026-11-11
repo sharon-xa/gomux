@@ -3,8 +3,8 @@ package screens
 import (
 	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/sharon-xa/gomux/tui/commenui"
-	"github.com/sharon-xa/gomux/tui/shared"
+	"github.com/sharon-xa/gomux/internal/tui/messages"
+	"github.com/sharon-xa/gomux/internal/tui/style"
 )
 
 type Action int
@@ -109,22 +109,22 @@ func (m MainMenuModel) handleSelection() tea.Cmd {
 	switch m.getSelectedMenuItem().action {
 	case createScript:
 		return func() tea.Msg {
-			return shared.NewScreenChange(shared.CREATE_SCRIPT, nil)
+			return messages.NewScreenChange(messages.CREATE_SCRIPT, nil)
 		}
 
 	case listScripts:
 		return func() tea.Msg {
-			return shared.NewScreenChange(shared.LIST_SCRIPTS, nil)
+			return messages.NewScreenChange(messages.LIST_SCRIPTS, nil)
 		}
 
 	case runScript:
 		return func() tea.Msg {
-			return shared.NewScreenChange(shared.RUN_SCRIPT, nil)
+			return messages.NewScreenChange(messages.RUN_SCRIPT, nil)
 		}
 
 	case settings:
 		return func() tea.Msg {
-			return shared.NewScreenChange(shared.SETTINGS, nil)
+			return messages.NewScreenChange(messages.SETTINGS, nil)
 		}
 
 	default:
@@ -134,9 +134,9 @@ func (m MainMenuModel) handleSelection() tea.Cmd {
 
 func (m MainMenuModel) View() string {
 	m.list.Title = "Gomux - Tmux Script Manager"
-	m.list.Styles.Title = commenui.TitleStyle
+	m.list.Styles.Title = style.TitleStyle
 	m.list.SetShowStatusBar(false)
 	m.list.SetFilteringEnabled(true)
 
-	return commenui.StyledPage(m.list.View())
+	return style.StyledPage(m.list.View())
 }

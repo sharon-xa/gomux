@@ -26,7 +26,8 @@ Many tests are **expected to fail** until their milestone is done. Don't "fix" a
 - `internal/render/`: `render.Bash(*workspace.Script)` turns a spec into a bash script. The most broken part (review section 1), and where milestones M1–M5 happen. It holds the generator tests.
 - `internal/store/`: file storage under `~/.local/share/gomux/` (`dataState/` = JSON specs, `data/` = generated scripts). Saves bytes it's given; never renders.
 - `internal/actions/`: operations shared by the CLI and the TUI, combining workspace, render and store. `NewScript(...)` applies defaults, validates, saves the spec, renders, then saves the script.
-- `tui/`: Bubble Tea. The root model in `tui/model.go` routes messages to screens in `tui/screens/`. Shared messages and state are in `tui/shared/`, styles and help in `tui/commenui/`.
+- `internal/tui/`: Bubble Tea. The root model (`model.go`) owns `AppState` (`state.go`) and routes messages to the screens in `screens/`. Screens talk to the root only through the message types in `messages/` (plus `ScreenState` and message payloads). Styles and the help bar are in `style/`.
+  - The package is `messages`, not `msg`, so it isn't hidden by the usual `Update(msg tea.Msg)` parameter.
 
 ## Testing
 

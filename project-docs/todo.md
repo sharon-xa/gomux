@@ -102,7 +102,8 @@ The smallest useful thing: a valid script that creates a session with one window
 
 ## M7 — TUI end to end
 
-- [ ] Restructure step 3: move `tui/` → `internal/tui/`; rename `commenui` → `style` and `shared` → `msg` (messages only)
+- [x] Restructure step 3: move `tui/` → `internal/tui/`; rename `commenui` → `style` and `shared` → `messages` (`AppState` moved to the root `tui` package)
+- [ ] Give the form's text inputs a width: the Description, Language and Tags placeholders show only their first letter
 - [ ] Rebuild the create form around session (name, dir, type), windows and panes; drop language, tags and content (3.2)
 - [ ] Show a live preview of the generated script in the form
 - [ ] Load scripts from disk on startup (3.3) and render them in the list (3.5)

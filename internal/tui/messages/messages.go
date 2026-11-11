@@ -1,4 +1,4 @@
-package shared
+package messages
 
 import "github.com/sharon-xa/gomux/internal/workspace"
 

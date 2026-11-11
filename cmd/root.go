@@ -6,7 +6,7 @@ import (
 	"os"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/sharon-xa/gomux/tui"
+	"github.com/sharon-xa/gomux/internal/tui"
 	"github.com/spf13/cobra"
 )
 
