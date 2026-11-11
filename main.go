@@ -2,10 +2,10 @@ package main
 
 import (
 	"github.com/sharon-xa/gomux/cmd"
-	"github.com/sharon-xa/gomux/internal/database"
+	"github.com/sharon-xa/gomux/internal/store"
 )
 
 func main() {
-	database.InitDB()
+	store.Init()
 	cmd.Execute()
 }

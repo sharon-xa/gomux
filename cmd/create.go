@@ -4,13 +4,13 @@ Copyright © 2025 Ali Jabar <ali93456@gmail.com>
 package cmd
 
 import (
+	"github.com/sharon-xa/gomux/internal/actions"
 	"github.com/sharon-xa/gomux/internal/workspace"
-	"github.com/sharon-xa/gomux/pkg/actions"
 	"github.com/spf13/cobra"
 )
 
 var (
-	actionsInstance actions.IActions
+	actionsInstance *actions.Actions
 	createCmd       = &cobra.Command{
 		Use:   "create",
 		Short: "Build a tmux script configuration",
@@ -31,7 +31,7 @@ Examples:
   # Create everything at once
   gomux create all --name dev --dir ~/projects`,
 		PersistentPreRun: func(cmd *cobra.Command, args []string) {
-			actionsInstance = actions.NewActions()
+			actionsInstance = actions.New()
 		},
 		PersistentPostRunE: func(cmd *cobra.Command, args []string) error {
 			// return actionsInstance.NewScript()

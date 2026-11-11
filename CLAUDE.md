@@ -22,11 +22,10 @@ Many tests are **expected to fail** until their milestone is done. Don't "fix" a
 ## Layout
 
 - `main.go`, `cmd/`: Cobra commands. No args launches the TUI. `create` subcommands are stubs.
-- `internal/workspace/`: the spec types (`Script`, `Session`, `Window`, `Pane`) and JSON (de)serialization. No bash, no storage.
+- `internal/workspace/`: the spec types (`Script`, `Session`, `Window`, `Pane`), JSON (de)serialization, and the rules: `ApplyDefaults()`, `Validate()` and the `Err*` validation errors (compare with `errors.Is`). No bash, no storage.
 - `internal/render/`: `render.Bash(*workspace.Script)` turns a spec into a bash script. The most broken part (review section 1), and where milestones M1–M5 happen. It holds the generator tests.
-- `internal/database/`: file storage under `~/.local/share/gomux/` (`dataState/` = JSON specs, `data/` = generated scripts). It still calls `render.Bash` when saving; that goes away in M6.
-- `internal/gomuxerr/`: sentinel errors; compare with `errors.Is`.
-- `pkg/actions/`: `NewScript(...)` validates, then saves. Planned move to `internal/`.
+- `internal/store/`: file storage under `~/.local/share/gomux/` (`dataState/` = JSON specs, `data/` = generated scripts). Saves bytes it's given; never renders.
+- `internal/actions/`: operations shared by the CLI and the TUI, combining workspace, render and store. `NewScript(...)` applies defaults, validates, saves the spec, renders, then saves the script.
 - `tui/`: Bubble Tea. The root model in `tui/model.go` routes messages to screens in `tui/screens/`. Shared messages and state are in `tui/shared/`, styles and help in `tui/commenui/`.
 
 ## Testing
@@ -35,13 +34,14 @@ Many tests are **expected to fail** until their milestone is done. Don't "fix" a
 - The integration tests start a private tmux server per case: own `TMUX_TMPDIR`, `HOME`, `XDG_CONFIG_HOME`, `SHELL=/bin/sh`, with `TMUX` unset. Keep it that way. Tests must never touch the user's running tmux server, `~/.config/tmux/tmux.conf`, or `~/.local/share/gomux`.
 - **Generator contract:** when `GOMUX_NO_ATTACH=1` is set, generated scripts must not `attach` or `switch-client`. Tests have no terminal.
 - The user's own tmux config sets `base-index 1` and `pane-base-index 1`. Generated scripts must not assume any index base; target windows by name.
-- Tests in `pkg/actions` set `HOME` to a temp dir before calling `NewActions()`. Do the same in any test that touches storage.
+- Tests in `internal/actions` set `HOME` to a temp dir before calling `actions.New()`. Do the same in any test that touches storage.
 
 ## Conventions
 
 - Generated bash: single-quote every user-supplied value. Never interpolate raw strings into `"..."`.
 - Delete dead code instead of commenting it out.
 - Unfinished code returns an error (`errors.New("not implemented")`), never a silent `return nil`.
+- Errors live in the package that owns them (`workspace.ErrSessionNameRequired`), not in a shared errors package. Messages are lowercase.
 - Every bug fix comes with a test or fixture that would have caught it.
 - Commits: small, one concern each, Conventional Commit prefixes (`feat:`, `fix:`, `test:`, `docs:`, `build:`, `chore:`).
 - When a roadmap item is done, tick it in `project-docs/todo.md` in the same commit.

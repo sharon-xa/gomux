@@ -7,8 +7,8 @@ import (
 	"github.com/charmbracelet/bubbles/textarea"
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/sharon-xa/gomux/internal/actions"
 	"github.com/sharon-xa/gomux/internal/workspace"
-	"github.com/sharon-xa/gomux/pkg/actions"
 	"github.com/sharon-xa/gomux/tui/commenui"
 	"github.com/sharon-xa/gomux/tui/shared"
 )
@@ -21,7 +21,7 @@ type CreateScriptModel struct {
 	contentInput     textarea.Model
 	tagsInput        textinput.Model
 	languageInput    textinput.Model
-	actions          actions.IActions
+	actions          *actions.Actions
 
 	// UI state
 	focusedField int
@@ -73,7 +73,7 @@ func NewCreateScriptModel() CreateScriptModel {
 		tagsInput:        tagsInput,
 		contentInput:     contentInput,
 		focusedField:     nameField,
-		actions:          actions.NewActions(),
+		actions:          actions.New(),
 	}
 }
 

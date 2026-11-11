@@ -1,4 +1,6 @@
-package database
+// Package store persists workspace specs and their generated scripts as files
+// under ~/.local/share/gomux. It does not render anything itself.
+package store
 
 import (
 	"fmt"
@@ -13,7 +15,7 @@ const (
 	GOMUX_CACHE_PATH  string = "/.cache/gomux/"
 )
 
-type DB struct {
+type Store struct {
 	gomuxDirPath string
 	dataStateDir string
 	dataDir      string
@@ -37,7 +39,8 @@ data/
 the folder itself is called "gomux/"
 */
 
-func InitDB() {
+// Init creates the gomux data directories if they don't exist yet.
+func Init() {
 	homeDir, err := os.UserHomeDir()
 	if err != nil {
 		fmt.Println("Couldn't get the home directory")
@@ -56,25 +59,38 @@ func InitDB() {
 		}
 	}
 
-	checkDirectoryExistence(dataStateDir)
-	checkDirectoryExistence(dataDir)
+	ensureDir(dataStateDir)
+	ensureDir(dataDir)
 }
 
-func NewDB() *DB {
+func New() *Store {
 	homeDir, _ := os.UserHomeDir()
 
 	gomuxDirPath := path.Join(homeDir + GOMUX_DATA_PATH)
 	dataStateDir := path.Join(gomuxDirPath, "dataState")
 	dataDir := path.Join(gomuxDirPath, "data")
 
-	return &DB{
+	return &Store{
 		gomuxDirPath: gomuxDirPath,
 		dataStateDir: dataStateDir,
 		dataDir:      dataDir,
 	}
 }
 
-func (db *DB) saveFile(filepath string, fileContent []byte, executable bool) error {
+func ensureDir(dirPath string) {
+	if _, err := os.Stat(dirPath); os.IsNotExist(err) {
+		err = os.Mkdir(dirPath, 0o755)
+		if err != nil {
+			fmt.Println(
+				"Couldn't make direcotory inside gomux directory.\nFull Path:",
+				dirPath,
+			)
+			panic(err)
+		}
+	}
+}
+
+func (s *Store) saveFile(filepath string, fileContent []byte, executable bool) error {
 	dir, _ := path.Split(filepath)
 
 	if dir != "" {

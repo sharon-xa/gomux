@@ -6,17 +6,16 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/sharon-xa/gomux/internal/gomuxerr"
 	"github.com/sharon-xa/gomux/internal/workspace"
 )
 
 // newTestActions points the data dir at a temp HOME so tests never touch
 // your real ~/.local/share/gomux.
-func newTestActions(t *testing.T) (IActions, string) {
+func newTestActions(t *testing.T) (*Actions, string) {
 	t.Helper()
 	home := t.TempDir()
 	t.Setenv("HOME", home)
-	return NewActions(), home
+	return New(), home
 }
 
 func validSession() workspace.Session {
@@ -27,61 +26,25 @@ func validWindows() []workspace.Window {
 	return []workspace.Window{{Name: "editor", Number: 0, Command: "nvim ."}}
 }
 
-func TestNewScriptValidation(t *testing.T) {
-	tests := []struct {
-		name    string
-		session workspace.Session
-		windows []workspace.Window
-		wantErr error
-	}{
-		{
-			name:    "missing session name",
-			session: workspace.Session{Directory: "/tmp", Type: "work"},
-			windows: validWindows(),
-			wantErr: gomuxerr.ErrNoSessionNameFound,
-		},
-		{
-			name:    "missing session directory",
-			session: workspace.Session{Name: "dev", Type: "work"},
-			windows: validWindows(),
-			wantErr: gomuxerr.ErrNoSessionDirectoryFound,
-		},
-		{
-			name:    "missing session type",
-			session: workspace.Session{Name: "dev", Directory: "/tmp"},
-			windows: validWindows(),
-			wantErr: gomuxerr.ErrNoSessionTypeFound,
-		},
-		{
-			name:    "no windows",
-			session: validSession(),
-			windows: nil,
-			wantErr: gomuxerr.ErrNoWindowFound,
-		},
-		{
-			name:    "window without command",
-			session: validSession(),
-			windows: []workspace.Window{{Name: "editor", Number: 0}},
-			wantErr: gomuxerr.ErrNoWindowCommandFound,
-		},
+// The rules themselves are tested in workspace; this checks NewScript
+// enforces them and writes nothing when they fail.
+func TestNewScriptRejectsInvalidAndSavesNothing(t *testing.T) {
+	a, home := newTestActions(t)
+
+	script, err := a.NewScript(workspace.Session{Directory: "/tmp", Type: "work"}, validWindows(), 0, nil)
+	if !errors.Is(err, workspace.ErrSessionNameRequired) {
+		t.Fatalf("err = %v, want %v", err, workspace.ErrSessionNameRequired)
+	}
+	if script != nil {
+		t.Errorf("script = %+v, want nil on error", script)
 	}
 
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			a, _ := newTestActions(t)
-
-			script, err := a.NewScript(tt.session, tt.windows, 0, nil)
-			if !errors.Is(err, tt.wantErr) {
-				t.Fatalf("err = %v, want %v", err, tt.wantErr)
-			}
-			if script != nil {
-				t.Errorf("script = %+v, want nil on error", script)
-			}
-		})
+	if _, err := os.Stat(filepath.Join(home, ".local")); !os.IsNotExist(err) {
+		t.Errorf("files were written for an invalid script (stat err = %v)", err)
 	}
 }
 
-// Review 5.1: defaults are currently set on loop copies and lost.
+// Review 5.1: defaults used to be set on loop copies and lost.
 func TestNewScriptAppliesDefaults(t *testing.T) {
 	a, _ := newTestActions(t)
 

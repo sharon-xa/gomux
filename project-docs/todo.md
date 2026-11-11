@@ -34,7 +34,7 @@ then open it with one command, from the CLI or the TUI.
 - [x] `justfile` with `build`, `run`, `test`, `test-unit`, `test-integration`, `test-fixture`, `update-golden`, `check`
 - [x] Generator tests: `bash -n` syntax check plus golden files (`internal/render/script_test.go`)
 - [x] Real-tmux integration tests with an isolated server and config (`internal/render/tmux_integration_test.go`)
-- [x] `actions` tests for validation, defaults and persistence (`pkg/actions/actions_test.go`)
+- [x] `actions` tests for validation, defaults and persistence (now `internal/actions` and `internal/workspace`)
 - [x] Restructure step 1: split `internal/models` into `internal/workspace` (spec types) and `internal/render` (bash generation + its tests)
 
 The test cases live in `internal/render/fixtures_test.go`. When the model changes shape, update the `build` funcs there; the expectations describe tmux behaviour and shouldn't need to change.
@@ -88,14 +88,14 @@ The smallest useful thing: a valid script that creates a session with one window
 
 ## M6 — Specs and storage
 
-- [ ] Apply defaults on the real slice elements, not loop copies (5.1) → `TestNewScriptAppliesDefaults`
+- [x] Apply defaults on the real slice elements, not loop copies (5.1) → `TestNewScriptAppliesDefaults`
 - [ ] Save the spec as `.tmux.json` (4.1) → `TestNewScriptPersistsSpecAndScript`
 - [ ] Sanitize session name and type before using them as paths, and reject `/`, `..` and empty values (4.2)
 - [ ] Decide what happens when a script already exists: error or explicit overwrite (4.3)
-- [ ] Move validation and defaults onto the spec (`workspace.Script.Validate()`, `ApplyDefaults()`) (5.3)
-- [ ] Restructure step 2: rename `internal/database` → `internal/store`, and stop calling `render.Bash` from storage (5.6)
-- [ ] Restructure step 2: move errors into the packages that own them (`workspace.ErrNameRequired`, `store.ErrExists`) and delete `gomuxerr`
-- [ ] Restructure step 2: move `pkg/actions` → `internal/`, or delete it if `store` + `render` are enough once validation lives on the spec (5.4)
+- [x] Move validation and defaults onto the spec (`workspace.Script.Validate()`, `ApplyDefaults()`) (5.3)
+- [x] Restructure step 2: rename `internal/database` → `internal/store`, and stop calling `render.Bash` from storage (5.6)
+- [x] Restructure step 2: move errors into the packages that own them (`workspace.ErrSessionNameRequired`, …) and delete `gomuxerr`
+- [x] Restructure step 2: move `pkg/actions` → `internal/actions` (kept: it's the shared defaults → validate → save → render → save sequence) and drop `IActions` (5.4)
 - [ ] Give scripts an ID; `<type>/<name>` matches the on-disk layout (3.4)
 - [ ] Add `List()`, `Get(id)` and `Delete(id)` to storage (4.9)
 - [ ] Decide whether to store the `.sh` at all, or generate it from the spec when running (4.4)
@@ -124,7 +124,7 @@ The smallest useful thing: a valid script that creates a session with one window
 
 - [ ] Read `$XDG_DATA_HOME`; merge `InitDB`/`NewDB`; use `path/filepath` (4.5–4.8)
 - [ ] Delete unused template state and messages (section 6)
-- [ ] Lowercase error strings in `gomuxerr` (5.5)
+- [x] Lowercase error strings (5.5)
 - [ ] README with install instructions and an example spec
 - [ ] CI: run `just check` on every push (GitHub Actions)
 
