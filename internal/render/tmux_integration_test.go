@@ -1,4 +1,4 @@
-package models_test
+package render_test
 
 import (
 	"context"
@@ -11,6 +11,8 @@ import (
 	"syscall"
 	"testing"
 	"time"
+
+	"github.com/sharon-xa/gomux/internal/render"
 )
 
 // TestTmuxIntegration runs each generated script against a real, isolated tmux
@@ -72,7 +74,7 @@ func runFixture(t *testing.T, tmuxBin string, f fixture) {
 		return strings.TrimRight(string(out), "\n"), err
 	}
 
-	script := f.build(projDir).Stringify()
+	script := render.Bash(f.build(projDir))
 	scriptPath := filepath.Join(root, "script.sh")
 	if err := os.WriteFile(scriptPath, []byte(script), 0o755); err != nil {
 		t.Fatal(err)

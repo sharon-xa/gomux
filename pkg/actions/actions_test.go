@@ -7,7 +7,7 @@ import (
 	"testing"
 
 	"github.com/sharon-xa/gomux/internal/gomuxerr"
-	"github.com/sharon-xa/gomux/internal/models"
+	"github.com/sharon-xa/gomux/internal/workspace"
 )
 
 // newTestActions points the data dir at a temp HOME so tests never touch
@@ -19,36 +19,36 @@ func newTestActions(t *testing.T) (IActions, string) {
 	return NewActions(), home
 }
 
-func validSession() models.Session {
-	return models.Session{Name: "dev", Directory: "/tmp", Type: "work"}
+func validSession() workspace.Session {
+	return workspace.Session{Name: "dev", Directory: "/tmp", Type: "work"}
 }
 
-func validWindows() []models.Window {
-	return []models.Window{{Name: "editor", Number: 0, Command: "nvim ."}}
+func validWindows() []workspace.Window {
+	return []workspace.Window{{Name: "editor", Number: 0, Command: "nvim ."}}
 }
 
 func TestNewScriptValidation(t *testing.T) {
 	tests := []struct {
 		name    string
-		session models.Session
-		windows []models.Window
+		session workspace.Session
+		windows []workspace.Window
 		wantErr error
 	}{
 		{
 			name:    "missing session name",
-			session: models.Session{Directory: "/tmp", Type: "work"},
+			session: workspace.Session{Directory: "/tmp", Type: "work"},
 			windows: validWindows(),
 			wantErr: gomuxerr.ErrNoSessionNameFound,
 		},
 		{
 			name:    "missing session directory",
-			session: models.Session{Name: "dev", Type: "work"},
+			session: workspace.Session{Name: "dev", Type: "work"},
 			windows: validWindows(),
 			wantErr: gomuxerr.ErrNoSessionDirectoryFound,
 		},
 		{
 			name:    "missing session type",
-			session: models.Session{Name: "dev", Directory: "/tmp"},
+			session: workspace.Session{Name: "dev", Directory: "/tmp"},
 			windows: validWindows(),
 			wantErr: gomuxerr.ErrNoSessionTypeFound,
 		},
@@ -61,7 +61,7 @@ func TestNewScriptValidation(t *testing.T) {
 		{
 			name:    "window without command",
 			session: validSession(),
-			windows: []models.Window{{Name: "editor", Number: 0}},
+			windows: []workspace.Window{{Name: "editor", Number: 0}},
 			wantErr: gomuxerr.ErrNoWindowCommandFound,
 		},
 	}
@@ -87,25 +87,25 @@ func TestNewScriptAppliesDefaults(t *testing.T) {
 
 	script, err := a.NewScript(
 		validSession(),
-		[]models.Window{
+		[]workspace.Window{
 			{Name: "editor", Number: 0, Command: "nvim ."},
 			{Name: "server", Number: 1, Command: "npm run dev"},
 		},
 		0,
-		[]models.Pane{{ID: 0, Location: 1, Command: "htop"}},
+		[]workspace.Pane{{ID: 0, Location: 1, Command: "htop"}},
 	)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	for _, w := range script.Windows {
-		if w.Layout != models.LayoutEvenVertical {
-			t.Errorf("window %q layout = %q, want default %q", w.Name, w.Layout, models.LayoutEvenVertical)
+		if w.Layout != workspace.LayoutEvenVertical {
+			t.Errorf("window %q layout = %q, want default %q", w.Name, w.Layout, workspace.LayoutEvenVertical)
 		}
 	}
 	for i, p := range script.Panes {
-		if p.Direction != models.Vertical {
-			t.Errorf("pane %d direction = %q, want default %q", i, p.Direction, models.Vertical)
+		if p.Direction != workspace.Vertical {
+			t.Errorf("pane %d direction = %q, want default %q", i, p.Direction, workspace.Vertical)
 		}
 	}
 }

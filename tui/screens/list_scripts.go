@@ -7,7 +7,7 @@ import (
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
-	"github.com/sharon-xa/gomux/internal/models"
+	"github.com/sharon-xa/gomux/internal/workspace"
 	"github.com/sharon-xa/gomux/tui/shared"
 )
 
@@ -15,8 +15,8 @@ import (
 // Note: It holds a COPY of the scripts for display, not the source of truth
 type ListScriptsModel struct {
 	// Local state for UI only
-	scripts       []models.Script // Read-only copy from root model
-	cursor        int             // Selected script index
+	scripts       []workspace.Script // Read-only copy from root model
+	cursor        int                // Selected script index
 	width         int
 	height        int
 	showingDetail bool // Whether showing detail view
@@ -25,7 +25,7 @@ type ListScriptsModel struct {
 // NewListScriptsModel creates a new list scripts model
 func NewListScriptsModel(width, height int) ListScriptsModel {
 	return ListScriptsModel{
-		scripts:       []models.Script{},
+		scripts:       []workspace.Script{},
 		cursor:        0,
 		showingDetail: false,
 	}
@@ -33,7 +33,7 @@ func NewListScriptsModel(width, height int) ListScriptsModel {
 
 // NewListScriptsModelWithScripts creates model with scripts
 // This is called by Root Model when transitioning to this screen
-func NewListScriptsModelWithScripts(scripts []models.Script) ListScriptsModel {
+func NewListScriptsModelWithScripts(scripts []workspace.Script) ListScriptsModel {
 	return ListScriptsModel{
 		scripts:       scripts,
 		cursor:        0,

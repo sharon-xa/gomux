@@ -4,10 +4,11 @@ import (
 	"log"
 	"path/filepath"
 
-	"github.com/sharon-xa/gomux/internal/models"
+	"github.com/sharon-xa/gomux/internal/render"
+	"github.com/sharon-xa/gomux/internal/workspace"
 )
 
-func (db *DB) AddScript(script *models.Script) error {
+func (db *DB) AddScript(script *workspace.Script) error {
 	jsonScript, err := script.Jsonify()
 	if err != nil {
 		log.Println("Failed to jsonify script: ", err)
@@ -23,7 +24,7 @@ func (db *DB) AddScript(script *models.Script) error {
 		return err
 	}
 
-	scriptAsString := script.Stringify()
+	scriptAsString := render.Bash(script)
 	scriptFilePath := filepath.Join(db.dataDir, folderAndFile)
 
 	err = db.saveFile(scriptFilePath, []byte(scriptAsString), true)

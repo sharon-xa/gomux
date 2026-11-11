@@ -1,6 +1,6 @@
 package shared
 
-import "github.com/sharon-xa/gomux/internal/models"
+import "github.com/sharon-xa/gomux/internal/workspace"
 
 type ScreenChangeMsg struct {
 	Screen ScreenState
@@ -15,12 +15,12 @@ func NewScreenChange(screen ScreenState, data any) ScreenChangeMsg {
 }
 
 type ScriptCreatedMsg struct {
-	Script models.Script
+	Script workspace.Script
 }
 
 type ScriptUpdatedMsg struct {
 	ScriptID string
-	Script   models.Script
+	Script   workspace.Script
 }
 
 type ScriptDeletedMsg struct {

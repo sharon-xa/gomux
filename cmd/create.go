@@ -4,7 +4,7 @@ Copyright © 2025 Ali Jabar <ali93456@gmail.com>
 package cmd
 
 import (
-	"github.com/sharon-xa/gomux/internal/models"
+	"github.com/sharon-xa/gomux/internal/workspace"
 	"github.com/sharon-xa/gomux/pkg/actions"
 	"github.com/spf13/cobra"
 )
@@ -49,7 +49,7 @@ func newSessionCmd() *cobra.Command {
 			// dir, _ := cmd.Flags().GetString("dir")
 			// typ, _ := cmd.Flags().GetString("type")
 
-			// session := models.Session{
+			// session := workspace.Session{
 			// 	Name:      name,
 			// 	Directory: dir,
 			// 	Type:      typ,
@@ -79,11 +79,11 @@ func newWindowCmd() *cobra.Command {
 			// layout, _ := cmd.Flags().GetString("layout")
 			// sync, _ := cmd.Flags().GetBool("sync")
 			//
-			// w := models.Window{
+			// w := workspace.Window{
 			// 	Name:              name,
 			// 	Number:            number,
 			// 	Command:           cmdStr,
-			// 	Layout:            models.Layout(layout),
+			// 	Layout:            workspace.Layout(layout),
 			// 	SynchronizedPanes: sync,
 			// }
 			//
@@ -95,7 +95,7 @@ func newWindowCmd() *cobra.Command {
 	cmd.Flags().String("name", "", "Window name")
 	cmd.Flags().Int("number", 1, "Window number")
 	cmd.Flags().String("cmd", "", "Command to run in this window")
-	cmd.Flags().String("layout", string(models.LayoutEvenVertical), "Layout type")
+	cmd.Flags().String("layout", string(workspace.LayoutEvenVertical), "Layout type")
 	cmd.Flags().Bool("sync", false, "Synchronize panes")
 
 	return cmd
@@ -111,10 +111,10 @@ func newPaneCmd() *cobra.Command {
 			// dir, _ := cmd.Flags().GetString("direction")
 			// cmdStr, _ := cmd.Flags().GetString("cmd")
 			//
-			// p := models.Pane{
+			// p := workspace.Pane{
 			// 	ID:        id,
 			// 	Location:  location,
-			// 	Direction: models.Direction(dir),
+			// 	Direction: workspace.Direction(dir),
 			// 	Command:   cmdStr,
 			// }
 			//
@@ -125,7 +125,7 @@ func newPaneCmd() *cobra.Command {
 
 	cmd.Flags().Int("id", 0, "Pane ID")
 	cmd.Flags().Int("window", 0, "Window location (number)")
-	cmd.Flags().String("direction", string(models.Vertical), "Pane split direction")
+	cmd.Flags().String("direction", string(workspace.Vertical), "Pane split direction")
 	cmd.Flags().String("cmd", "", "Command to run in pane")
 
 	return cmd

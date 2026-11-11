@@ -22,15 +22,16 @@ Many tests are **expected to fail** until their milestone is done. Don't "fix" a
 ## Layout
 
 - `main.go`, `cmd/`: Cobra commands. No args launches the TUI. `create` subcommands are stubs.
-- `internal/models/`: domain types (`Script`, `Session`, `Window`, `Pane`) **and** bash rendering (`Stringify()`). The renderer is the most broken part (review section 1).
-- `internal/database/`: file storage under `~/.local/share/gomux/` (`dataState/` = JSON specs, `data/` = generated scripts).
+- `internal/workspace/`: the spec types (`Script`, `Session`, `Window`, `Pane`) and JSON (de)serialization. No bash, no storage.
+- `internal/render/`: `render.Bash(*workspace.Script)` turns a spec into a bash script. The most broken part (review section 1), and where milestones M1–M5 happen. It holds the generator tests.
+- `internal/database/`: file storage under `~/.local/share/gomux/` (`dataState/` = JSON specs, `data/` = generated scripts). It still calls `render.Bash` when saving; that goes away in M6.
 - `internal/gomuxerr/`: sentinel errors; compare with `errors.Is`.
 - `pkg/actions/`: `NewScript(...)` validates, then saves. Planned move to `internal/`.
 - `tui/`: Bubble Tea. The root model in `tui/model.go` routes messages to screens in `tui/screens/`. Shared messages and state are in `tui/shared/`, styles and help in `tui/commenui/`.
 
 ## Testing
 
-- The test cases are in `internal/models/fixtures_test.go`. Expectations describe tmux behaviour, not model fields. When the model changes shape, update only the `build` funcs.
+- The test cases are in `internal/render/fixtures_test.go`. Expectations describe tmux behaviour, not model fields. When the model changes shape, update only the `build` funcs.
 - The integration tests start a private tmux server per case: own `TMUX_TMPDIR`, `HOME`, `XDG_CONFIG_HOME`, `SHELL=/bin/sh`, with `TMUX` unset. Keep it that way. Tests must never touch the user's running tmux server, `~/.config/tmux/tmux.conf`, or `~/.local/share/gomux`.
 - **Generator contract:** when `GOMUX_NO_ATTACH=1` is set, generated scripts must not `attach` or `switch-client`. Tests have no terminal.
 - The user's own tmux config sets `base-index 1` and `pane-base-index 1`. Generated scripts must not assume any index base; target windows by name.

@@ -3,7 +3,7 @@ package shared
 import (
 	"time"
 
-	"github.com/sharon-xa/gomux/internal/models"
+	"github.com/sharon-xa/gomux/internal/workspace"
 )
 
 // ScriptExecutionResult represents the result of running a script
@@ -51,7 +51,7 @@ func (a *AppState) GetRecentExecutions(limit int) []ScriptExecutionResult {
 	return a.ExecutionHistory[start:]
 }
 
-func (a *AppState) FilterScripts(query string, tags []string) []models.Script {
+func (a *AppState) FilterScripts(query string, tags []string) []workspace.Script {
 	return nil
 }
 

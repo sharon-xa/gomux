@@ -7,7 +7,7 @@ import (
 	"github.com/charmbracelet/bubbles/textarea"
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/sharon-xa/gomux/internal/models"
+	"github.com/sharon-xa/gomux/internal/workspace"
 	"github.com/sharon-xa/gomux/pkg/actions"
 	"github.com/sharon-xa/gomux/tui/commenui"
 	"github.com/sharon-xa/gomux/tui/shared"
@@ -207,16 +207,16 @@ func (m CreateScriptModel) saveScript() tea.Cmd {
 		language = "bash"
 	}
 
-	session := models.Session{}
-	window := models.Window{}
+	session := workspace.Session{}
+	window := workspace.Window{}
 	startingWindow := 1
-	pane := models.Pane{}
+	pane := workspace.Pane{}
 
 	script, err := m.actions.NewScript(
 		session,
-		[]models.Window{window},
+		[]workspace.Window{window},
 		startingWindow,
-		[]models.Pane{pane},
+		[]workspace.Pane{pane},
 	)
 	if err != nil {
 		// handle error

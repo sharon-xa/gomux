@@ -1,4 +1,4 @@
-package models_test
+package render_test
 
 import (
 	"bufio"
@@ -9,13 +9,15 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
+
+	"github.com/sharon-xa/gomux/internal/render"
 )
 
 var update = flag.Bool("update", false, "rewrite testdata/*.golden.sh from the current output")
 
-// TestStringifyIsValidBash checks every fixture renders to a script that bash
+// TestBashIsValid checks every fixture renders to a script that bash
 // can parse, with a shebang that points at a real interpreter.
-func TestStringifyIsValidBash(t *testing.T) {
+func TestBashIsValid(t *testing.T) {
 	bash, err := exec.LookPath("bash")
 	if err != nil {
 		t.Skip("bash not found in PATH")
@@ -23,7 +25,7 @@ func TestStringifyIsValidBash(t *testing.T) {
 
 	for _, f := range fixtures {
 		t.Run(f.name, func(t *testing.T) {
-			script := f.build(goldenDir).Stringify()
+			script := render.Bash(f.build(goldenDir))
 
 			checkShebang(t, script)
 
@@ -69,16 +71,16 @@ func checkShebang(t *testing.T, script string) {
 	}
 }
 
-// TestStringifyGolden pins the exact generated output, so later refactors
+// TestBashGolden pins the exact generated output, so later refactors
 // (e.g. moving to text/template) can't change scripts by accident.
 //
 // Golden files are only created on request, since pinning broken output would
 // lock the bugs in. Once a fixture's script is correct, run `just update-golden`
 // and review the diff before committing.
-func TestStringifyGolden(t *testing.T) {
+func TestBashGolden(t *testing.T) {
 	for _, f := range fixtures {
 		t.Run(f.name, func(t *testing.T) {
-			got := f.build(goldenDir).Stringify()
+			got := render.Bash(f.build(goldenDir))
 			path := filepath.Join("testdata", f.name+".golden.sh")
 
 			if *update {

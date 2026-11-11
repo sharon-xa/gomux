@@ -1,11 +1,11 @@
 package screens
 
 import (
-	"github.com/sharon-xa/gomux/internal/models"
+	"github.com/sharon-xa/gomux/internal/workspace"
 )
 
 type RunScriptModel struct {
-	scripts []models.Script
+	scripts []workspace.Script
 
 	cursor int
 	width  int
@@ -14,14 +14,14 @@ type RunScriptModel struct {
 
 func NewRunScriptModel(width, height int) RunScriptModel {
 	return RunScriptModel{
-		scripts: []models.Script{},
+		scripts: []workspace.Script{},
 		cursor:  0,
 	}
 }
 
-func NewRunScriptModelWithScript(script models.Script) RunScriptModel {
+func NewRunScriptModelWithScript(script workspace.Script) RunScriptModel {
 	return RunScriptModel{
-		scripts: []models.Script{
+		scripts: []workspace.Script{
 			script,
 		},
 		cursor: 1,

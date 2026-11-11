@@ -5,7 +5,7 @@ import (
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/x/term"
-	"github.com/sharon-xa/gomux/internal/models"
+	"github.com/sharon-xa/gomux/internal/workspace"
 	"github.com/sharon-xa/gomux/tui/commenui"
 	"github.com/sharon-xa/gomux/tui/screens"
 	"github.com/sharon-xa/gomux/tui/shared"
@@ -187,7 +187,7 @@ func (m Model) View() string {
 	}
 }
 
-func (m *Model) GetScripts() []models.Script {
+func (m *Model) GetScripts() []workspace.Script {
 	return m.state.Scripts
 }
 

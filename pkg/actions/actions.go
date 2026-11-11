@@ -3,7 +3,7 @@ package actions
 import (
 	"github.com/sharon-xa/gomux/internal/database"
 	"github.com/sharon-xa/gomux/internal/gomuxerr"
-	"github.com/sharon-xa/gomux/internal/models"
+	"github.com/sharon-xa/gomux/internal/workspace"
 )
 
 type Actions struct {
@@ -12,11 +12,11 @@ type Actions struct {
 
 type IActions interface {
 	NewScript(
-		session models.Session,
-		windows []models.Window,
+		session workspace.Session,
+		windows []workspace.Window,
 		startingWindow int,
-		panes []models.Pane,
-	) (*models.Script, error)
+		panes []workspace.Pane,
+	) (*workspace.Script, error)
 }
 
 func NewActions() IActions {
@@ -26,11 +26,11 @@ func NewActions() IActions {
 }
 
 func (a *Actions) NewScript(
-	session models.Session,
-	windows []models.Window,
+	session workspace.Session,
+	windows []workspace.Window,
 	startingWindow int,
-	panes []models.Pane,
-) (*models.Script, error) {
+	panes []workspace.Pane,
+) (*workspace.Script, error) {
 	if session.Name == "" {
 		return nil, gomuxerr.ErrNoSessionNameFound
 	}
@@ -49,7 +49,7 @@ func (a *Actions) NewScript(
 
 	for _, window := range windows {
 		if window.Layout == "" {
-			window.Layout = models.LayoutEvenVertical
+			window.Layout = workspace.LayoutEvenVertical
 		}
 
 		if window.Command == "" {
@@ -63,14 +63,14 @@ func (a *Actions) NewScript(
 
 	for _, pane := range panes {
 		if pane.Direction == "" {
-			pane.Direction = models.Vertical
+			pane.Direction = workspace.Vertical
 		}
 		if pane.Location == 0 {
 			return nil, gomuxerr.ErrNoPaneLocationFound
 		}
 	}
 
-	script := models.NewScript(session, windows, startingWindow, panes)
+	script := workspace.NewScript(session, windows, startingWindow, panes)
 	err := a.DB.AddScript(script)
 	if err != nil {
 		return nil, err

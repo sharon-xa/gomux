@@ -1,6 +1,6 @@
-package models_test
+package render_test
 
-import "github.com/sharon-xa/gomux/internal/models"
+import "github.com/sharon-xa/gomux/internal/workspace"
 
 // fixture is one end-to-end scenario for the script generator.
 //
@@ -13,7 +13,7 @@ type fixture struct {
 	// dirName is the session directory created inside the test's temp dir.
 	dirName string
 
-	build func(dir string) *models.Script
+	build func(dir string) *workspace.Script
 
 	// tmuxConf, if set, is written to the isolated ~/.tmux.conf before the
 	// script runs, to check the script doesn't depend on the user's config.
@@ -55,10 +55,10 @@ var fixtures = []fixture{
 		// Milestone 1: the smallest script that has to work.
 		name:    "single-window",
 		dirName: "project",
-		build: func(dir string) *models.Script {
-			return models.NewScript(
-				models.Session{Name: "gomux-single", Directory: dir, Type: "test"},
-				[]models.Window{
+		build: func(dir string) *workspace.Script {
+			return workspace.NewScript(
+				workspace.Session{Name: "gomux-single", Directory: dir, Type: "test"},
+				[]workspace.Window{
 					{Name: "editor", Number: 0, Command: "echo ready > single.txt"},
 				},
 				0,
@@ -76,10 +76,10 @@ var fixtures = []fixture{
 		// Milestone 2: several windows, starting on one that isn't the first.
 		name:    "multi-window",
 		dirName: "project",
-		build: func(dir string) *models.Script {
-			return models.NewScript(
-				models.Session{Name: "gomux-multi", Directory: dir, Type: "test"},
-				[]models.Window{
+		build: func(dir string) *workspace.Script {
+			return workspace.NewScript(
+				workspace.Session{Name: "gomux-multi", Directory: dir, Type: "test"},
+				[]workspace.Window{
 					{Name: "editor", Number: 0, Command: "echo editor > editor.txt"},
 					{Name: "server", Number: 1, Command: "echo server > server.txt"},
 					{Name: "logs", Number: 2, Command: "echo logs > logs.txt"},
@@ -104,17 +104,17 @@ var fixtures = []fixture{
 		// Milestone 3: one window split into three panes, each running its own command.
 		name:    "panes",
 		dirName: "project",
-		build: func(dir string) *models.Script {
-			return models.NewScript(
-				models.Session{Name: "gomux-panes", Directory: dir, Type: "test"},
-				[]models.Window{
-					{Name: "dev", Number: 0, Command: "echo main > main.txt", Layout: models.LayoutTiled},
+		build: func(dir string) *workspace.Script {
+			return workspace.NewScript(
+				workspace.Session{Name: "gomux-panes", Directory: dir, Type: "test"},
+				[]workspace.Window{
+					{Name: "dev", Number: 0, Command: "echo main > main.txt", Layout: workspace.LayoutTiled},
 				},
 				0,
 				// Current model: ID = index of the pane being split, Location = window number.
-				[]models.Pane{
-					{ID: 0, Location: 0, Direction: models.Horizontal, Command: "echo right > right.txt"},
-					{ID: 1, Location: 0, Direction: models.Vertical, Command: "echo bottom > bottom.txt"},
+				[]workspace.Pane{
+					{ID: 0, Location: 0, Direction: workspace.Horizontal, Command: "echo right > right.txt"},
+					{ID: 1, Location: 0, Direction: workspace.Vertical, Command: "echo bottom > bottom.txt"},
 				},
 			)
 		},
@@ -135,10 +135,10 @@ var fixtures = []fixture{
 		// double quotes, single quotes, $ and backslashes, plus a directory with a space.
 		name:    "quoting",
 		dirName: "my project",
-		build: func(dir string) *models.Script {
-			return models.NewScript(
-				models.Session{Name: "gomux-quoting", Directory: dir, Type: "test"},
-				[]models.Window{
+		build: func(dir string) *workspace.Script {
+			return workspace.NewScript(
+				workspace.Session{Name: "gomux-quoting", Directory: dir, Type: "test"},
+				[]workspace.Window{
 					{
 						Name:    "shell",
 						Number:  0,
@@ -166,16 +166,16 @@ var fixtures = []fixture{
 		tmuxConf: "set -g base-index 1\n" +
 			"set -g pane-base-index 1\n" +
 			"set-window-option -g pane-base-index 1\n",
-		build: func(dir string) *models.Script {
-			return models.NewScript(
-				models.Session{Name: "gomux-baseindex", Directory: dir, Type: "test"},
-				[]models.Window{
+		build: func(dir string) *workspace.Script {
+			return workspace.NewScript(
+				workspace.Session{Name: "gomux-baseindex", Directory: dir, Type: "test"},
+				[]workspace.Window{
 					{Name: "editor", Number: 0, Command: "echo editor > editor.txt"},
 					{Name: "server", Number: 1, Command: "echo server > server.txt"},
 				},
 				1,
-				[]models.Pane{
-					{ID: 0, Location: 0, Direction: models.Horizontal, Command: "echo split > split.txt"},
+				[]workspace.Pane{
+					{ID: 0, Location: 0, Direction: workspace.Horizontal, Command: "echo split > split.txt"},
 				},
 			)
 		},

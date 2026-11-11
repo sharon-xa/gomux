@@ -1,13 +1,13 @@
 package shared
 
 import (
-	"github.com/sharon-xa/gomux/internal/models"
+	"github.com/sharon-xa/gomux/internal/workspace"
 )
 
 // AppState holds all shared application state
 // This lives in the Root Model
 type AppState struct {
-	Scripts          []models.Script         `json:"scripts"`
+	Scripts          []workspace.Script      `json:"scripts"`
 	ExecutionHistory []ScriptExecutionResult `json:"execution_history"`
 	Settings         Settings                `json:"settings"`
 	CurrentScriptID  string                  `json:"current_script_id"` // ID of script being edited/run
@@ -20,7 +20,7 @@ type AppState struct {
 // NewDefaultAppState creates a new AppState with sensible defaults
 func NewDefaultAppState() AppState {
 	return AppState{
-		Scripts:          []models.Script{},
+		Scripts:          []workspace.Script{},
 		ExecutionHistory: []ScriptExecutionResult{},
 		Settings: Settings{
 			Theme: Theme{
@@ -45,15 +45,15 @@ func NewDefaultAppState() AppState {
 	}
 }
 
-func (a *AppState) GetScriptByID(id string) *models.Script {
+func (a *AppState) GetScriptByID(id string) *workspace.Script {
 	return nil
 }
 
-func (a *AppState) AddScript(script models.Script) {
+func (a *AppState) AddScript(script workspace.Script) {
 	a.Scripts = append(a.Scripts, script)
 }
 
-func (a *AppState) UpdateScript(id string, script models.Script) bool {
+func (a *AppState) UpdateScript(id string, script workspace.Script) bool {
 	return false
 }
 

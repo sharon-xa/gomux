@@ -2,6 +2,7 @@
 
 _Reviewed: 2026-11-11 · commit `854153b` ("upload latest code") · ~2.1k lines of Go_
 _First pass was on `035f681`; see [What changed since the first pass](#what-changed-since-the-first-pass)._
+_Since then, `internal/models` has been split. Rendering (`Stringify` → `render.Bash`, the constants and helpers) is now in `internal/render/bash.go`, and the types are in `internal/workspace/`. File and line references below are for `854153b`._
 
 **Method:** I read every Go file. `go build` and `go vet` both pass. I also:
 - rendered a sample script from `internal/models` and ran it through `bash -n`

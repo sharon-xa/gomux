@@ -24,16 +24,16 @@ test-unit:
 
 # Only the tmux integration tests, verbose and uncached
 test-integration *args:
-    go test ./internal/models/ -run TestTmuxIntegration -count=1 -v {{ args }}
+    go test ./internal/render/ -run TestTmuxIntegration -count=1 -v {{ args }}
 
 # Tests for one roadmap milestone fixture, e.g. `just test-fixture single-window`
 test-fixture name:
-    go test ./internal/models/ -count=1 -v -run '/{{ name }}$'
+    go test ./internal/render/ -count=1 -v -run '/{{ name }}$'
 
 # Rewrite golden files from the current generator output (review the diff before committing!)
 update-golden:
-    go test ./internal/models/ -run TestStringifyGolden -update
-    git status --short -- internal/models/testdata
+    go test ./internal/render/ -run TestBashGolden -update
+    git status --short -- internal/render/testdata
 
 # Format all Go files
 fmt:
