@@ -1,0 +1,137 @@
+package actions
+
+import (
+	"errors"
+	"os"
+	"path/filepath"
+	"testing"
+
+	"github.com/sharon-xa/gomux/internal/gomuxerr"
+	"github.com/sharon-xa/gomux/internal/models"
+)
+
+// newTestActions points the data dir at a temp HOME so tests never touch
+// your real ~/.local/share/gomux.
+func newTestActions(t *testing.T) (IActions, string) {
+	t.Helper()
+	home := t.TempDir()
+	t.Setenv("HOME", home)
+	return NewActions(), home
+}
+
+func validSession() models.Session {
+	return models.Session{Name: "dev", Directory: "/tmp", Type: "work"}
+}
+
+func validWindows() []models.Window {
+	return []models.Window{{Name: "editor", Number: 0, Command: "nvim ."}}
+}
+
+func TestNewScriptValidation(t *testing.T) {
+	tests := []struct {
+		name    string
+		session models.Session
+		windows []models.Window
+		wantErr error
+	}{
+		{
+			name:    "missing session name",
+			session: models.Session{Directory: "/tmp", Type: "work"},
+			windows: validWindows(),
+			wantErr: gomuxerr.ErrNoSessionNameFound,
+		},
+		{
+			name:    "missing session directory",
+			session: models.Session{Name: "dev", Type: "work"},
+			windows: validWindows(),
+			wantErr: gomuxerr.ErrNoSessionDirectoryFound,
+		},
+		{
+			name:    "missing session type",
+			session: models.Session{Name: "dev", Directory: "/tmp"},
+			windows: validWindows(),
+			wantErr: gomuxerr.ErrNoSessionTypeFound,
+		},
+		{
+			name:    "no windows",
+			session: validSession(),
+			windows: nil,
+			wantErr: gomuxerr.ErrNoWindowFound,
+		},
+		{
+			name:    "window without command",
+			session: validSession(),
+			windows: []models.Window{{Name: "editor", Number: 0}},
+			wantErr: gomuxerr.ErrNoWindowCommandFound,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			a, _ := newTestActions(t)
+
+			script, err := a.NewScript(tt.session, tt.windows, 0, nil)
+			if !errors.Is(err, tt.wantErr) {
+				t.Fatalf("err = %v, want %v", err, tt.wantErr)
+			}
+			if script != nil {
+				t.Errorf("script = %+v, want nil on error", script)
+			}
+		})
+	}
+}
+
+// Review 5.1: defaults are currently set on loop copies and lost.
+func TestNewScriptAppliesDefaults(t *testing.T) {
+	a, _ := newTestActions(t)
+
+	script, err := a.NewScript(
+		validSession(),
+		[]models.Window{
+			{Name: "editor", Number: 0, Command: "nvim ."},
+			{Name: "server", Number: 1, Command: "npm run dev"},
+		},
+		0,
+		[]models.Pane{{ID: 0, Location: 1, Command: "htop"}},
+	)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	for _, w := range script.Windows {
+		if w.Layout != models.LayoutEvenVertical {
+			t.Errorf("window %q layout = %q, want default %q", w.Name, w.Layout, models.LayoutEvenVertical)
+		}
+	}
+	for i, p := range script.Panes {
+		if p.Direction != models.Vertical {
+			t.Errorf("pane %d direction = %q, want default %q", i, p.Direction, models.Vertical)
+		}
+	}
+}
+
+// Review 4.1: the spec should be saved as <name>.tmux.json and the script as
+// <name>.tmux.sh, under a folder named after the session type.
+func TestNewScriptPersistsSpecAndScript(t *testing.T) {
+	a, home := newTestActions(t)
+
+	if _, err := a.NewScript(validSession(), validWindows(), 0, nil); err != nil {
+		t.Fatal(err)
+	}
+
+	base := filepath.Join(home, ".local", "share", "gomux")
+	spec := filepath.Join(base, "dataState", "work", "dev.tmux.json")
+	script := filepath.Join(base, "data", "work", "dev.tmux.sh")
+
+	if _, err := os.Stat(spec); err != nil {
+		t.Errorf("spec not saved at %s: %v", spec, err)
+	}
+
+	info, err := os.Stat(script)
+	if err != nil {
+		t.Fatalf("script not saved at %s: %v", script, err)
+	}
+	if info.Mode().Perm()&0o100 == 0 {
+		t.Errorf("script %s is not executable (mode %v)", script, info.Mode().Perm())
+	}
+}
